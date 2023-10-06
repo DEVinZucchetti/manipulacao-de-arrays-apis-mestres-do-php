@@ -1,1 +1,1 @@
-[]
+[{"name":"PERU","contact":"Al\u00f4 PERU","openingHours":"08:00 as 08:15","description":"PERU de manha PERU de tarde PERU de noite","latitude":"120235","longitude":"770141"}]
