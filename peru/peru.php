@@ -1,54 +1,67 @@
 <?php
-    require_once 'config.php';
-    require_once 'utils.php';
+require_once 'config.php';
+require_once 'utils.php';
 
-    $method = $_SERVER["REQUEST_METHOD"];
+$method = $_SERVER["REQUEST_METHOD"];
 
-    if($method == 'POST'){
-        $body =getBody();
+if ($method === 'POST') {
 
-        $name = filter_var($body -> name, FILTER_SANITIZE_SPECIAL_CHARS);
-        $contact = filter_var($body -> contact, FILTER_SANITIZE_SPECIAL_CHARS);
-        $openingHours = filter_var($body -> openingHours, FILTER_SANITIZE_SPECIAL_CHARS);
-        $description = filter_var($body -> description, FILTER_SANITIZE_SPECIAL_CHARS);
-        $latitude = filter_var($body -> latitude, FILTER_SANITIZE_NUMBER_FLOAT);
-        $longitude = filter_var($body -> longitude, FILTER_SANITIZE_NUMBER_FLOAT);
+    $body = getBody();
 
+    $name = filter_var($body->name, FILTER_SANITIZE_SPECIAL_CHARS);
+    $contact = filter_var($body->contact, FILTER_SANITIZE_SPECIAL_CHARS);
+    $opening_Hours = filter_var($body->openingHours, FILTER_SANITIZE_SPECIAL_CHARS);
+    $description = filter_var($body->description, FILTER_SANITIZE_SPECIAL_CHARS);
+    $latitude = filter_var($body->latitude, FILTER_SANITIZE_NUMBER_FLOAT);
+    $longitude = filter_var($body->longitude, FILTER_SANITIZE_NUMBER_FLOAT);
 
-        if(!$name){
-            http_response_code(400);
-            echo json_encode(['error' => 'Nome é obrigatório']); 
-        }
-        if(!$contact){
-            http_response_code(400);
-            echo json_encode(['error' => 'Campo de contato é obrigatório']); 
-        }
-        if(!$openingHours){
-            http_response_code(400);
-            echo json_encode(['error' => 'A hora de abertura  é obrigatório']); 
-        }
-        if(!$description){
-            http_response_code(400);
-            echo json_encode(['error' => 'A descrição é obrigatório']); 
-        }
-        if(!$latitude){
-            http_response_code(400);
-            echo json_encode(['error' => 'A latitude é obrigatório']); 
-        }
-        if(!$longitude){
-            http_response_code(400);
-            echo json_encode(['error' => 'A longitude é obrigatório']); 
-        }
-            $peru = readFileContent(ARQUIVO_PERU);
-
-            array_push($peru, ['name' => $name, 'contact' => $contact, 'openingHours' => $openingHours,
-             'description' => $description, 'latitude' => $latitude, 'longitude' => $longitude]);
-        
-
-        file_put_contents(ARQUIVO_PERU, json_encode($peru));
-
-        http_response_code(201);
-        echo json_encode([
-            'message' => "Dados salvos com sucesso"
-        ]); 
+    if (!$name) {
+        responseError('Nome é obrigatório', 400);
     }
+    if (!$contact) {
+        responseError('Campo de contato é obrigatório', 400);
+    }
+    if (!$opening_Hours) {
+        responseError('A hora de abertura  é obrigatório', 400);
+    }
+    if (!$description) {
+        responseError('A descrição é obrigatório', 400);
+    }
+    if (!$latitude) {
+        responseError(' A latitude é obrigatória', 400);
+    }
+    if (!$longitude) {
+        responseError('A longitude é obrigatório', 400);
+    }
+
+    $allData = readFileContent(ARQUIVO_PERU);
+
+    $itemWithSameName = array_filter($allData, function($item) use($name) {
+        return $item->name === $name;
+      });
+ 
+      if(count($itemWithSameName) > 0) {
+         responseError('Item ja existe', 409);
+      }
+
+    $data = [
+        'id' => $_SERVER['REQUEST_TIME'],
+        'name' => $name,
+        'contact' => $contact,
+        'openingHours' => $opening_Hours,
+        'description' => $description,
+        'latitude' => $latitude,
+        'longitude' => $longitude
+    ];
+
+    array_push($allData, $data);
+
+    saveFileContent(ARQUIVO_PERU, $allData);
+
+    response($data, 201);
+} else if ($method === 'GET') {
+
+    $allData = readfile(ARQUIVO_PERU);
+
+    response($allData, 200);
+}
