@@ -36,13 +36,13 @@ if ($method === 'POST') {
 
     $allData = readFileContent(ARQUIVO_PERU);
 
-    $itemWithSameName = array_filter($allData, function($item) use($name) {
+    $itemWithSameName = array_filter($allData, function ($item) use ($name) {
         return $item->name === $name;
-      });
- 
-      if(count($itemWithSameName) > 0) {
-         responseError('Item ja existe', 409);
-      }
+    });
+
+    if (count($itemWithSameName) > 0) {
+        responseError('Item ja existe', 409);
+    }
 
     $data = [
         'id' => $_SERVER['REQUEST_TIME'],
@@ -59,9 +59,57 @@ if ($method === 'POST') {
     saveFileContent(ARQUIVO_PERU, $allData);
 
     response($data, 201);
-} else if ($method === 'GET') {
+} else if ($method === 'GET' && !isset($_GET['id'])) {
 
     $allData = readfile(ARQUIVO_PERU);
 
     response($allData, 200);
+} else if ($method === 'DELETE') {
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        responseError('ID ausente', 400);
+    }
+
+    $allData = readFileContent(ARQUIVO_PERU);
+
+    $itemsFiltered = array_filter($allData, function ($item) use ($id) {
+        if($item->id !== $id);
+    });
+
+    var_dump($itemsFiltered);
+
+    saveFileContent(ARQUIVO_PERU, $itemsFiltered);
+
+    response(['message' => 'Deletado com sucesso'], 204);
+} else if ($method === 'GET' && $_GET['id']) {
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        responseError('ID ausente', 400);
+    }
+
+    $allData = readFileContent(ARQUIVO_PERU);
+    foreach ($allData as $item) {
+        if ($item->id === $id) {
+            response($item, 200);
+        }
+    }
+} else if ($method === 'PUT') {
+    $body = getBody();
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+    $allData = readFileContent(ARQUIVO_PERU);
+    foreach ($allData as $position => $item) {
+        if ($item->id === $id) {
+            $allData[$position]->name = $body->name;
+            $allData[$position]->contact = $body->contact;
+            $allData[$position]->description = $body->description;
+            $allData[$position]->opening_hours = $body->opening_hours;
+            $allData[$position]->latitude = $body->latitude;
+            $allData[$position]->longitude = $body->longitude;
+        }
+    }
+
+    saveFileContent(ARQUIVO_PERU, $allData);
 }
