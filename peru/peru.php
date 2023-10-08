@@ -4,10 +4,13 @@ require_once 'utils.php';
 
 $method = $_SERVER["REQUEST_METHOD"];
 
+// Se o método da requisição for POST
 if ($method === 'POST') {
 
+    // Obtém o corpo da requisição
     $body = getBody();
 
+    // Filtra e valida os dados recebidos
     $name = filter_var($body->name, FILTER_SANITIZE_SPECIAL_CHARS);
     $contact = filter_var($body->contact, FILTER_SANITIZE_SPECIAL_CHARS);
     $opening_Hours = filter_var($body->openingHours, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -15,35 +18,24 @@ if ($method === 'POST') {
     $latitude = filter_var($body->latitude, FILTER_SANITIZE_NUMBER_FLOAT);
     $longitude = filter_var($body->longitude, FILTER_SANITIZE_NUMBER_FLOAT);
 
-    if (!$name) {
-        responseError('Nome é obrigatório', 400);
-    }
-    if (!$contact) {
-        responseError('Campo de contato é obrigatório', 400);
-    }
-    if (!$opening_Hours) {
-        responseError('A hora de abertura  é obrigatório', 400);
-    }
-    if (!$description) {
-        responseError('A descrição é obrigatório', 400);
-    }
-    if (!$latitude) {
-        responseError(' A latitude é obrigatória', 400);
-    }
-    if (!$longitude) {
-        responseError('A longitude é obrigatório', 400);
+    // Verifica se os dados obrigatórios estão presentes
+    if (!$name || !$contact || !$opening_Hours || !$description || !$latitude || !$longitude) {
+        responseError('Dados incompletos ou inválidos', 400);
     }
 
-    $allData = readFileContent(ARQUIVO_PERU);
+    // Lê os dados existentes
+    $allData = readFileContent(FILE_CITY);
 
+    // Verifica se já existe um item com o mesmo nome
     $itemWithSameName = array_filter($allData, function ($item) use ($name) {
         return $item->name === $name;
     });
 
     if (count($itemWithSameName) > 0) {
-        responseError('Item ja existe', 409);
+        responseError('Item já existe', 409);
     }
 
+    // Cria um novo item
     $data = [
         'id' => $_SERVER['REQUEST_TIME'],
         'name' => $name,
@@ -54,62 +46,112 @@ if ($method === 'POST') {
         'longitude' => $longitude
     ];
 
+    // Adiciona o novo item aos dados existentes
     array_push($allData, $data);
 
-    saveFileContent(ARQUIVO_PERU, $allData);
+    // Salva os dados atualizados
+    saveFileContent(FILE_CITY, $allData);
 
+    // Responde com os dados do novo item criado
     response($data, 201);
+
+// Se o método da requisição for GET e não houver parâmetro 'id'
 } else if ($method === 'GET' && !isset($_GET['id'])) {
 
-    $allData = readfile(ARQUIVO_PERU);
-
+    // Lê os dados e responde com todos os itens
+    $allData = readfile(FILE_CITY);
     response($allData, 200);
+
+// Se o método da requisição for DELETE
 } else if ($method === 'DELETE') {
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
+    // Verifica se o parâmetro 'id' está presente e é um número inteiro válido
     if (!$id) {
-        responseError('ID ausente', 400);
+        responseError('ID ausente ou inválido', 400);
     }
 
-    $allData = readFileContent(ARQUIVO_PERU);
+    // Lê os dados existentes
+    $allData = readFileContent(FILE_CITY);
 
-    $itemsFiltered = array_filter($allData, function ($item) use ($id) {
-        if($item->id !== $id);
+    // Filtra os itens, removendo o item com o ID correspondente
+    $itensFiltered = array_filter($allData, function ($item) use ($id) {
+        return $item->id !== $id;
     });
 
-    var_dump($itemsFiltered);
+    // Salva os dados atualizados sem o item removido
+    saveFileContent(FILE_CITY, $itensFiltered);
 
-    saveFileContent(ARQUIVO_PERU, $itemsFiltered);
-
+    // Responde com mensagem de sucesso
     response(['message' => 'Deletado com sucesso'], 204);
+
+// Se o método da requisição for GET e houver parâmetro 'id'
 } else if ($method === 'GET' && $_GET['id']) {
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
+    // Verifica se o parâmetro 'id' está presente e é um número inteiro válido
     if (!$id) {
-        responseError('ID ausente', 400);
+        responseError('ID ausente ou inválido', 400);
     }
 
-    $allData = readFileContent(ARQUIVO_PERU);
-    foreach ($allData as $item) {
+    // Lê os dados existentes
+    $allData = readFileContent(FILE_CITY);
+
+    // Procura o item com o ID correspondente
+    foreach ($allData as $position => $item) {
         if ($item->id === $id) {
+            // Responde com os dados do item encontrado
             response($item, 200);
         }
     }
+
+// Se o método da requisição for PUT
 } else if ($method === 'PUT') {
     $body = getBody();
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
-    $allData = readFileContent(ARQUIVO_PERU);
+    // Verifica se o parâmetro 'id' está presente e é um número inteiro válido
+    if (!$id) {
+        responseError('ID ausente ou inválido', 400);
+    }
+
+    // Filtra e valida os dados recebidos para atualização
+    $newName = filter_var($body->name, FILTER_SANITIZE_SPECIAL_CHARS);
+    $newContact = filter_var($body->contact, FILTER_SANITIZE_SPECIAL_CHARS);
+    $newDescription = filter_var($body->description, FILTER_SANITIZE_SPECIAL_CHARS);
+    $newOpeningHours = filter_var($body->openingHours, FILTER_SANITIZE_SPECIAL_CHARS);
+    $newLatitude = filter_var($body->latitude, FILTER_SANITIZE_NUMBER_FLOAT);
+    $newLongitude = filter_var($body->longitude, FILTER_SANITIZE_NUMBER_FLOAT);
+
+    // Lê os dados existentes
+    $allData = readFileContent(FILE_CITY);
+
+    // Procura o item com o ID correspondente para atualização
     foreach ($allData as $position => $item) {
         if ($item->id === $id) {
-            $allData[$position]->name = $body->name;
-            $allData[$position]->contact = $body->contact;
-            $allData[$position]->description = $body->description;
-            $allData[$position]->opening_hours = $body->opening_hours;
-            $allData[$position]->latitude = $body->latitude;
-            $allData[$position]->longitude = $body->longitude;
+            // Atualiza os dados do item
+            $item->name = $newName;
+            $item->contact = $newContact;
+            $item->description = $newDescription;
+            $item->openingHours = $newOpeningHours;
+            $item->latitude = $newLatitude;
+            $item->longitude = $newLongitude;
         }
     }
 
-    saveFileContent(ARQUIVO_PERU, $allData);
+    // Salva os dados atualizados
+    saveFileContent(FILE_CITY, $allData);
+
+    // Verifica se pelo menos um item foi atualizado
+    $updatedItem = array_filter($allData, function ($item) use ($id) {
+        return $item->id === $id;
+    });
+
+    // Responde com os dados atualizados ou erro se o item não for encontrado
+    if (!empty($updatedItem)) {
+        response($updatedItem[0], 200);
+    } else {
+        responseError('Item não encontrado', 404);
+    }
 }
+?>
