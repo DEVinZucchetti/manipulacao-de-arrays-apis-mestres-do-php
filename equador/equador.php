@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $body = json_decode(file_get_contents('php://input'), true); // formato strig
 
+    $id = filter_var($body['id'], FILTER_VALIDATE_INT);
     $name = filter_var($body['name'], FILTER_SANITIZE_SPECIAL_CHARS);
     $contact = filter_var($body['contact'], FILTER_SANITIZE_SPECIAL_CHARS);
     $opening_hours = filter_var($body['opening_hours'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verifica se todos os campos necessários estão presentes
     if (
-        isset($body['name'], $body['contact'], $body['opening_hours'],
+        isset($body['id'], $body['name'], $body['contact'], $body['opening_hours'],
               $body['description'], $body['latitude'], $body['longitude'])
     ) {
         

@@ -5,8 +5,7 @@ require_once "config.php";
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
      $lugares = json_decode(file_get_contents('equador.txt'), true);
-
-     
+             
      if ($lugares !== null) {
                   
         http_response_code(200); 
