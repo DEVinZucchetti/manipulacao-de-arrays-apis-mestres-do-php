@@ -21,7 +21,7 @@ function saveFileContent($fileName, $content) {
     return json_decode(file_get_contents($fileName));
  }
 
- function responseCode($data, $status){
+ function response($data, $status){
     http_response_code($status);
     echo json_encode($data);
     exit;
