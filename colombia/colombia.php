@@ -84,11 +84,23 @@ if ($method === 'POST') {
    $body = getBody();
    $id = $_GET['id'];
 
+   if (!$id) {
+      http_response_code(400);
+      echo json_encode(['error' => 'id ausente']);
+   }
+
    $allData = readFileContent(LOCAIS);
 
    foreach ($allData as $position => $item) {
       if ($item->id == $id) {
-         $allData[$position]['name']->name = $body->name;
+
+         $allData[$position]->name = isset($body->name) ? $body->name :  $item->name;
+         $allData[$position]->contact = isset($body->contact) ? $body->contact :  $item->contact;
+         $allData[$position]->opening_hours = isset($body->opening_hours) ? $body->opening_hours :  $item->opening_hours;
+         $allData[$position]->description = isset($body->description) ? $body->description :  $item->description;
+         $allData[$position]->latitude = isset($body->latitude) ? $body->latitude :  $item->latitude;
+         $allData[$position]->longitude = isset($body->longitude) ? $body->longitude :  $item->longitude;
+
          exit;
       }
    }
