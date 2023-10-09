@@ -1,0 +1,106 @@
+<?php 
+
+require_once 'utils.php';
+
+define('FILE_CITY', 'uruguai.txt');
+
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *"); 
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); 
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+if($method === 'POST') {
+
+    $body = getBody();
+
+    $name = filter_var($body->name, FILTER_SANITIZE_SPECIAL_CHARS);
+    $contact = filter_var($body->contact, FILTER_SANITIZE_SPECIAL_CHARS);
+    $opening_hours = filter_var($body->opening_hours, FILTER_SANITIZE_SPECIAL_CHARS);
+    $description = filter_var($body->description, FILTER_SANITIZE_SPECIAL_CHARS);
+    $latitude = filter_var($body->latitude, FILTER_VALIDATE_FLOAT);
+    $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
+
+    if(!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
+        responseError('Digite as informações para prosseguir com o cadastro!', 400);
+    }
+
+    $allData = readFileContent(FILE_CITY);
+
+    foreach ($allData as $item) {
+        if ($item->name === $name) {
+            responseError('Este lugar já está cadastrado!', 409);
+            exit;
+        }
+    };
+
+    $data = [
+        'id' => generateUniqueID(),
+        'name' => $name,
+        'contact' => $contact,
+        'opening_hours' => $opening_hours,
+        'description' => $description,
+        'latitude' => $latitude, 
+        'longitude' => $longitude
+    ];
+
+    array_push($allData, $data);
+    saveFileContent(FILE_CITY, $allData);
+    response($data, 201);
+
+} else if ($method === 'GET'){
+    $allData = readFileContent(FILE_CITY);
+    response($allData, 200);
+
+} else if ($method === 'DELETE') {
+    $id = validateID();
+
+    if (!$id) {
+        responseError('ID ausente ou inválido!', 400);
+    }
+
+    $allData = readFileContent(FILE_CITY);
+    $itemsFiltered = array_filter($allData, function ($item) use ($id) {
+        return $item->id !== $id;
+    });
+
+    saveFileContent(FILE_CITY, $itemsFiltered);
+    response('', 204);
+
+} else if($method === 'GET' && $_GET['id']) {
+    $id = validateID();
+
+    if (!$id) {
+        responseError('ID ausente ou inválido!', 400);
+    }
+
+    $allData = readFileContent(FILE_CITY);
+
+    foreach($allData as $item) {
+        if($item->id === $id) {
+            response($item, 200);
+        }
+    }
+
+} else if($method === 'PUT') {
+    $body = getBody();
+    $id = validateID();
+
+    $allData = readFileContent(FILE_CITY);
+
+    foreach($allData as $position => $item) {
+        if($item->id === $id) {
+            $allData[$position]->name = $body->name;
+            $allData[$position]->contact = $body->contact;
+            $allData[$position]->opening_hours = $body->opening_hours;
+            $allData[$position]->description = $body->description;
+            $allData[$position]->latitude = $body->latitude;
+            $allData[$position]->longitude = $body->longitude;
+        }
+    }
+    
+    saveFileContent(FILE_CITY, $allData);
+}
+
+?>
