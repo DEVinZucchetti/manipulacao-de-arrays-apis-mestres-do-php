@@ -36,14 +36,28 @@ if ($method === 'POST') {
         http_response_code(400); // Bad Request
         echo json_encode(['error' => 'Preencha todos os campos obrigatórios']);
     } else {
-        // Adicione os dados ao array existente
-        $dadosBrasil[] = $data;
+        // Verifique se já existe um lugar com o mesmo nome
+        $lugarExistente = false;
+        foreach ($dadosBrasil as $lugar) {
+            if ($lugar->name === $name) { // Use a notação de seta para acessar propriedades de objetos
+                $lugarExistente = true;
+                break;
+            }
+        }
 
-        // Salve os dados atualizados no arquivo (usando uma função não fornecida)
-        saveFileContent(LOCAIS, $dadosBrasil);
+        if ($lugarExistente) {
+            http_response_code(400); // Bad Request
+            echo json_encode(['error' => 'Um lugar com o mesmo nome já existe']);
+        } else {
+            // Adicione os dados ao array existente
+            $dadosBrasil[] = $data;
 
-        http_response_code(201); // Created
-        echo json_encode(['message' => 'Lugar cadastrado com sucesso', 'data' => $data]);
+            // Salve os dados atualizados no arquivo (usando uma função não fornecida)
+            saveFileContent(LOCAIS, $dadosBrasil);
+
+            http_response_code(201); // Created
+            echo json_encode(['message' => 'Lugar cadastrado com sucesso', 'data' => $data]);
+        }
     }
 } elseif ($method === 'GET') {
     http_response_code(200); // OK
