@@ -25,9 +25,11 @@ function response($response, $status) {
 }
 
 function generateUniqueID() {
-    return time() . mt_rand(10000, 99999);
+  $uniqueID = time() . mt_rand(10000, 99999);
+  $integerID = intval($uniqueID);
+  return $integerID;
 }
 
 function validateID() {
     return filter_var($_GET['id'], FILTER_VALIDATE_INT);
-  }
+}
