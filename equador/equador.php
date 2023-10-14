@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Adiciona o novo lugar ao array de lugares
         $lugares[] = $body;
        
-        // Salva o array atualizado no arquivo        
+        // Salva o array no arquivo    
         file_put_contents('equador.txt', json_encode($lugares));
         
 
         http_response_code(201); 
-        echo json_encode(['message' => 'Lugar cadastrado com sucesso!']);
+        echo json_encode(['message' => 'Cadastrado com sucesso!']);
     } else {
         http_response_code(400); 
         echo json_encode(['error' => 'Dados incompletos. Certifique-se de incluir todos os campos necessários.']);
