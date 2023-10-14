@@ -1,0 +1,1 @@
+[{"id":"6529d4edc5db3","name":"descri\u00e7ao e [EDITADO PELO ADMIN]","email":"contato@minhaempresa.com","stars":1,"status":"pendente","place_id":"6529d4edc5db3","date":"13\/10\/23 08:10"}]
