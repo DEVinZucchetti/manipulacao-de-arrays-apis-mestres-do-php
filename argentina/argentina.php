@@ -15,7 +15,7 @@ if ($method === 'POST') {
     $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
 
     if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
-        responseError('Faltaram informações essenciais', 400);
+        responseError('Faltaram informacoes essenciais', 400);
     }
 
     $allData = readFileContent(FILE_CITY);
@@ -57,10 +57,10 @@ if ($method === 'POST') {
 
     $allData = readFileContent(FILE_CITY);
 
-    $itemsFiltered = array_filter($allData, function ($item) use ($id) {
-       return $item->id !== $id;
-    });
-
+  
+    $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
+        return $item->id !== $id;
+    }));
     var_dump($itemsFiltered);
 
     saveFileContent(FILE_CITY, $itemsFiltered);
@@ -80,11 +80,14 @@ if ($method === 'POST') {
             response($item, 200);
         }
     }
-} else if($method === 'PUT') {
+} else if ($method === 'PUT') {
     $body = getBody();
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
-    var_dump($id);
+    if (!$id) {
+        responseError('ID ausente', 400);
+    }
+
 
     $allData = readFileContent(FILE_CITY);
     foreach ($allData as $position => $item) {
