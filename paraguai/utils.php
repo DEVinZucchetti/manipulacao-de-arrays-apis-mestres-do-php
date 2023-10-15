@@ -2,7 +2,7 @@
 
 function getBody()
 {
-  return json_decode(file_get_contents("php://input")); // pegar o body no formato de string
+  return json_decode(file_get_contents("php://input"));
 }
 
 function readFileContent($fileName)
@@ -47,5 +47,4 @@ function sanitizeInput($data, $property, $filterType, $isObject = true) {
   } else {
     return isset($data[$property]) ? filter_var($data[$property], $filterType) : null;
   }
- 
 }

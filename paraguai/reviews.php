@@ -1,8 +1,11 @@
 <?php 
   require_once 'config.php';
   require_once 'utils.php';
+  require_once 'models/Review.php';
 
   $method = $_SERVER['REQUEST_METHOD'];
+
+  $blacklist = ['polimorfismo',  'herança', 'abstração', 'encapsulamento'];
 
   if ($method === 'POST') {
     $body = getBody();
@@ -19,5 +22,40 @@
 
     if (strlen($name) > 200) responseError('O texto ultrapassou o limite', 400);
 
+    foreach ($blacklist as $word) {
+      if (str_contains(strtolower($name), $word)) {
+          $name = str_ireplace($word, '[Editado]', $name);
+      }
   }
+
+  $review = new Review($place_id);
+    $review->setName($name);
+    $review->setEmail($email);
+    $review->setStars($stars);
+    $review->save();
+
+    response(['message' => 'Cadastro com sucesso'], 201);
+} else if ($method = 'GET') {
+
+    $place_id = sanitizeInput($_GET,  'id', FILTER_VALIDATE_INT, false);
+
+    if (!$place_id) responseError('ID do lugar está ausente', 400);
+
+    $reviews = new Review($place_id);
+
+    response($reviews->list(), 200);
+} else if ($method = "PUT") {
+    $body = getBody();
+    $id =  sanitizeInput($_GET, 'id', FILTER_VALIDATE_INT, false);
+
+    $status = sanitizeInput($body,  'status', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!$status) {
+        responseError('Status ausente', 400);
+    }
+
+    $review = new Review();
+
+}
+
 ?>
