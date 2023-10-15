@@ -1,11 +1,43 @@
 <?php 
 
+require_once 'utils.php';
  class Review{
 
     private $id, $name , $email, $stars , $date, $status , $place_Id;
     
 
+public function __construct($place_Id) {
+    $this->id = uniqid();
+    $this->place_Id = $place_Id;
+    $this->date = (new DateTime())->format('d/m/y h:m');
+    $this->status = 'PENDENTE';
+}
 
+    public function saveReview(){
+        $data = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'stars' => $this->getStars(),
+            'status' => $this->getStatus(),
+            'date' => $this->getDate(),
+            'place_id' => $this->getPlace_Id(),
+            
+        ];
+
+       $allData = readFileContent('reviews.txt');
+       array_push($allData, $data );
+       saveFileContent('reviews.txt', $allData);
+    }
+    public function list(){
+        $allData = readFileContent('reviews.txt');
+
+        $filtered = array_values(array_filter($allData, function($review){
+           return $review->place_id === $this->getPlace_Id();
+        }));
+        return $filtered;
+        var_dump($filtered);
+    }
 
     public function getId()
     {
@@ -53,13 +85,6 @@
         return $this->date;
     }
 
-  
-    public function setDate($date)
-    {
-        $this->date = $date;
-
-        return $this;
-    }
 
     public function getStatus()
     {
@@ -80,12 +105,7 @@
         return $this->place_Id;
     }
 
-    public function setPlace_Id($place_Id)
-    {
-        $this->place_Id = $place_Id;
-
-        return $this;
-    }
+   
  }
 
 ?>
