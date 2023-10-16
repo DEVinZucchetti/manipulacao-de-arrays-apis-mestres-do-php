@@ -1,33 +1,134 @@
 <?php
-require 'config.php';
-require 'utils.php';
+require_once './utils.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
+// nome da classe
+// os atributos
 
-$blacklist = ['polimorfismo', 'herança', 'encapsulamento', 'abstração'];
+/*
+enum ReviewsStatus {
+    case 'plano_g': 'GOLD';
+    case 2: 'FINALIZADO';
+    case 3: 'REPROVADO';
+}
+*/
+
+class Review
+{
+   private $id, $name, $email, $stars, $date, $status, $place_id;
+
+   public function __construct($place_id = null)
+   {
+      $this->id = uniqid();
+      $this->place_id = $place_id;
+      $this->date = (new DateTime())->format('d/m/Y h:m');
+      $this->status = 'PENDENTE';
+   }
+
+   public function save()
+   {
+      $data = [
+         'id' => $this->getId(),
+         'name' => $this->getName(),
+         'email' => $this->getEmail(),
+         'stars' => $this->getStars(),
+         'status' => $this->getStatus(),
+         'date' => $this->getDate(),
+         'place_id' => $this->getPlaceId()
+      ];
+
+      $allData = readFileContent('reviews.txt');
+      array_push($allData,  $data);
+      saveFileContent('reviews.txt', $allData);
+   }
+
+   public function list()
+   {
+      $allData = readFileContent('reviews.txt');
+
+      $filtered = array_values(array_filter($allData, function ($review) {
+         return $review->place_id === $this->getPlaceId();
+      }));
+
+      return $filtered;
+   }
+
+   public function updateStatus($id, $status)
+   {
+      $allData = readFileContent('reviews.txt');
+
+      /*
+        foreach ($allData as $position => $item) {
+            if ($item->id === $id) {
+                $allData[$position]->status = $status;
+            }
+        }
+        */
 
 
-if ($method === 'POST') {
-   $body = getBody();
-
-   $place_id = sanitizeInput($body, 'place_id', FILTER_VALIDATE_INT);
-   $name = sanitizeInput($body, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
-   $email = sanitizeInput($body, 'email', FILTER_VALIDATE_EMAIL);
-   $stars = sanitizeInput($body, 'stars', FILTER_VALIDATE_FLOAT);
-   $date = (new DateTtima())->format('d/m/y h:m');
-   $status = sanitizeInput($body, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
-
-   if (!$place_id) resposneError('id do lugar', 400);
-   if (!$name) resposneError('descriçao ausente', 400);
-   if (!$email) resposneError('email invalido ou ausente', 400);
-   if (!$stars) resposneError('sem estrelas', 400);
-   if (!$status) resposneError('status ausente', 400);
-
-   if (strlen($name) > 200) responseError('texto maior que 200', 400);
-
-   foreach ($blacklist as $word) {
-      if (str_contains($name, $word)) {
-         str_replace('%'.$word.'%', '[editado pelo adm]', $name)
+      foreach ($allData  as $review) {
+         if ($review->id === $id) {
+            $review->status = $status;
+            saveFileContent(FILE_REVIEWS, $allData);
+         }
       }
+
+
+      saveFileContent('reviews.txt', $allData);
+   }
+
+   public function getId()
+   {
+      return $this->id;
+   }
+
+   public function getName()
+   {
+      return $this->name;
+   }
+
+   public function setName($name)
+   {
+      $this->name = $name;
+   }
+
+   public function getEmail()
+   {
+      return $this->email;
+   }
+
+   public function setEmail($email)
+   {
+      $this->email = $email;
+   }
+
+   public function getStars()
+   {
+      return $this->stars;
+   }
+
+   public function setStars($stars)
+   {
+      $this->stars = $stars;
+   }
+
+   public function getDate()
+   {
+      return $this->date;
+   }
+
+   public function getStatus()
+   {
+      return $this->status;
+   }
+
+   public function setStatus($status)
+   {
+      $this->status = $status;
+   }
+
+
+   public function getPlaceId()
+   {
+      return $this->place_id;
    }
 }
