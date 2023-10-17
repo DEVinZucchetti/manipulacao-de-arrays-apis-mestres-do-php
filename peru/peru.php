@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'utils.php';
+require_once 'config/config.php';
+require_once 'utils/utils.php';
 
 $method = $_SERVER["REQUEST_METHOD"];
 

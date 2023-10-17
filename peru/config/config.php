@@ -5,3 +5,4 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // habi
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
 
 define('FILE_CITY', 'peru.txt');
+define('FILE_REVIEWS', 'reviews.txt');
