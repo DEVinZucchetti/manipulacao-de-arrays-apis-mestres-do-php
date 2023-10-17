@@ -9,6 +9,10 @@ class Review{
         $this->place_id = $place_id;
         $this->id = uniqid();
     }
+
+    public function save(){
+        
+    }
     
     public function getName()
     {
