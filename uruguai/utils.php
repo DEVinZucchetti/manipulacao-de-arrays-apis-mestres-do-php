@@ -33,3 +33,11 @@ function generateUniqueID() {
 function validateID() {
     return filter_var($_GET['id'], FILTER_VALIDATE_INT);
 }
+
+function sanitizeInput($data, $property, $filterType, $isObject = true) {
+  if($isObject) {
+    return isset($data->$property) ? filter_var($data->$property, $filterType) : null;
+  } else {
+    return isset($data[$property]) ? filter_var($data[$property], $filterType) : null;
+  }
+}
