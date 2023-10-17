@@ -1,4 +1,7 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
+define('FILE_REVIEWS', 'avaliacoes.txt');
+define('FILE_CITY', 'equador.txt');
 
 header("Content-Type: application/json"); // a aplicação retorna json
 header("Access-Control-Allow-Origin: *"); // vai aceitar requisições de todas origens
