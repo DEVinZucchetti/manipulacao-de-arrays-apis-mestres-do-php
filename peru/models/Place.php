@@ -1,5 +1,6 @@
 <?php
-require_once 'config/config.php';
+// No início do arquivo Place.php (models/Place.php)
+require_once __DIR__ . '/../config/config.php';
 
 class Place
 {
