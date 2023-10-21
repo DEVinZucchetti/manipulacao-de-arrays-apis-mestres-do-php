@@ -43,23 +43,18 @@ class Review
     public function updateStatus($id, $status)
     {
         $allData = readFileContent('reviews.txt');
-
-        /*
+        
         foreach ($allData as $position => $item) {
             if ($item->id === $id) {
                 $allData[$position]->status = $status;
             }
-        }
-        */
-
-     
-        foreach ($allData  as $review) {
-            if ($review->id === $id) {
-                $review->status = $status;
-                saveFileContent(FILE_REVIEWS, $allData);
-            }
-        }
-       
+        }   
+        // foreach ($allData  as $review) {
+        //     if ($review->id === $id) {
+        //         $review->status = $status;
+        //         saveFileContent(FILE_REVIEWS, $allData);
+        //     }
+        // }       
 
         saveFileContent('reviews.txt', $allData);
     }
