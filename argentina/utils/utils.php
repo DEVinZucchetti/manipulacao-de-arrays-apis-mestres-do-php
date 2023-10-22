@@ -38,3 +38,4 @@ function sanitizeInput($data, $property, $filterType, $isObject = true) {
    
   }
   
+  

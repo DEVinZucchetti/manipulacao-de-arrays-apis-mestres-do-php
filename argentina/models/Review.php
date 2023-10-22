@@ -1,12 +1,13 @@
 <?php 
 
-require_once 'utils.php';
+require_once '../utils/utils.php';
+require_once '../utils/config.php';
  class Review{
 
     private $id, $name , $email, $stars , $date, $status , $place_Id;
     
 
-public function __construct($place_Id) {
+public function __construct($place_Id = null) {
     $this->id = uniqid();
     $this->place_Id = $place_Id;
     $this->date = (new DateTime())->format('d/m/y h:m');
@@ -25,9 +26,9 @@ public function __construct($place_Id) {
             
         ];
 
-       $allData = readFileContent('reviews.txt');
+       $allData = readFileContent(FILE_REVIEWS);
        array_push($allData, $data );
-       saveFileContent('reviews.txt', $allData);
+       saveFileContent(FILE_REVIEWS, $allData);
     }
     public function list(){
         $allData = readFileContent('reviews.txt');
@@ -36,7 +37,19 @@ public function __construct($place_Id) {
            return $review->place_id === $this->getPlace_Id();
         }));
         return $filtered;
-        var_dump($filtered);
+       
+    }
+    
+    public function updateStatus($id, $status)
+    {
+        $allData = readFileContent('reviews.txt');
+
+        foreach ($allData as $position => $item) {
+            if ($item->id === $id) {
+                $allData[$position]->status = $status;
+            }
+        }
+        saveFileContent('reviews.txt', $allData);
     }
 
     public function getId()
