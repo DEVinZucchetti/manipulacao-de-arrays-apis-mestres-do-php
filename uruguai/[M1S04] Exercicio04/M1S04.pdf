@@ -66,8 +66,6 @@ INSERT INTO reviews
   	(name, email, stars, date, place_id)
 	VALUES 
 	('Verônica', 'veu@gmail.com', '4', now(), 1);
-	
-SELECT * FROM reviews r
 
 SELECT r.*
 FROM reviews r
