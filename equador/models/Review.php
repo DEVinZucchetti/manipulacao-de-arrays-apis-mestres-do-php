@@ -67,5 +67,16 @@ class Review{
         $this->status = $status;
 
     }
+
+    public function getPlace_id()
+    {
+        return $this->place_id;
+    }
+ 
+    public function setPlace_id($place_id)
+    {
+        $this->place_id = $place_id;
+
+    }
 }
 ?>
