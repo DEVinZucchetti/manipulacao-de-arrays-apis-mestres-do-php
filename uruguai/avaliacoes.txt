@@ -1,0 +1,1 @@
+[{"id":"652cae2e1fddb","place_id":169721448316449,"name":"Local confort\u00e1vel","email":"veronica@gmail.com","stars":1,"status":"PENDENTE","date":"16\/10\/2023 12:29"}]

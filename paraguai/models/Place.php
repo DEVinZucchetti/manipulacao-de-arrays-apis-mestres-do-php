@@ -1,5 +1,5 @@
 <?php
-require_once 'config/config.php';
+require_once 'config.php';
 
 class Place
 {
@@ -29,31 +29,31 @@ class Place
             'longitude' => $this->getLongitude()
         ];
 
-        $allData = readFileContent(FILE_CITY);
+        $allData = readFileContent(FILE_COUNTRY);
         array_push($allData, $data);
-        saveFileContent(FILE_CITY, $allData);
+        saveFileContent(FILE_COUNTRY, $allData);
     }
 
     public function list()
     {
-        $allData = readFileContent(FILE_CITY);
+        $allData = readFileContent(FILE_COUNTRY);
         return $allData;
     }
 
     public function delete($id)
     {
-        $allData = readFileContent(FILE_CITY);
+        $allData = readFileContent(FILE_COUNTRY);
 
         $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
             return $item->id !== $id;
         }));
 
-        saveFileContent(FILE_CITY, $itemsFiltered);
+        saveFileContent(FILE_COUNTRY, $itemsFiltered);
     }
 
     public function update($id, $data)
     {
-        $allData = readFileContent(FILE_CITY);
+        $allData = readFileContent(FILE_COUNTRY);
 
         foreach ($allData as $position => $item) {
             if ($item->id === $id) {
@@ -66,14 +66,14 @@ class Place
             }
         }
 
-        saveFileContent(FILE_CITY, $allData);
+        saveFileContent(FILE_COUNTRY, $allData);
     }
 
 
     public function listOne($id)
     {
 
-        $allData = readFileContent(FILE_CITY);
+        $allData = readFileContent(FILE_COUNTRY);
 
         foreach ($allData as $item) {
             if ($item->id === $id) {

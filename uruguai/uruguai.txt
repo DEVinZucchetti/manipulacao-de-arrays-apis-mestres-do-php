@@ -1,1 +1,1 @@
-[]
+[{"id":169721448316449,"name":"Montevideo Shopping","contact":"59826221005","opening_hours":"10:00-22:00","description":"O Montevideo Shopping Center \u00e9 o primeiro shopping inaugurado em Montevid\u00e9u, Uruguai.","latitude":-34.9030298,"longitude":-56.1385887},{"id":169721449985862,"name":"Teatro Solis","contact":"59819503323","opening_hours":"11:00-16:00","description":" Teatro Sol\u00eds da cidade de Montevid\u00e9u foi inaugurado no ano de 1856.","latitude":-34.9076336,"longitude":-56.2011228}]

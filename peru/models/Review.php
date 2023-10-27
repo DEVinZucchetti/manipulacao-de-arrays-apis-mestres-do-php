@@ -1,5 +1,5 @@
 <?php
-require_once 'utils/utils.php';
+require_once __DIR__ . '/../utils/utils.php';
 class Review
 {
     private $id;

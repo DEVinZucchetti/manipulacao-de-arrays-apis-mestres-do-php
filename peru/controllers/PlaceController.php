@@ -1,6 +1,7 @@
 <?php
-require_once 'utils/utils.php';
-require_once 'models/Place.php';
+
+require_once '../config/config.php';
+require_once '../models/Place.php';
 
 class PlaceController
 {
