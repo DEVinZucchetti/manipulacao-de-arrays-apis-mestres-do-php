@@ -1,16 +1,6 @@
 <?php
 require_once './utils.php';
 
-// nome da classe
-// os atributos
-
-/*
-enum ReviewsStatus {
-    case 'plano_g': 'GOLD';
-    case 2: 'FINALIZADO';
-    case 3: 'REPROVADO';
-}
-*/
 
 class Review
 {
@@ -24,57 +14,6 @@ class Review
       $this->status = 'PENDENTE';
    }
 
-   public function save()
-   {
-      $data = [
-         'id' => $this->getId(),
-         'name' => $this->getName(),
-         'email' => $this->getEmail(),
-         'stars' => $this->getStars(),
-         'status' => $this->getStatus(),
-         'date' => $this->getDate(),
-         'place_id' => $this->getPlaceId()
-      ];
-
-      $allData = readFileContent('reviews.txt');
-      array_push($allData,  $data);
-      saveFileContent('reviews.txt', $allData);
-   }
-
-   public function list()
-   {
-      $allData = readFileContent('reviews.txt');
-
-      $filtered = array_values(array_filter($allData, function ($review) {
-         return $review->place_id === $this->getPlaceId();
-      }));
-
-      return $filtered;
-   }
-
-   public function updateStatus($id, $status)
-   {
-      $allData = readFileContent('reviews.txt');
-
-      /*
-        foreach ($allData as $position => $item) {
-            if ($item->id === $id) {
-                $allData[$position]->status = $status;
-            }
-        }
-        */
-
-
-      foreach ($allData  as $review) {
-         if ($review->id === $id) {
-            $review->status = $status;
-            saveFileContent(FILE_REVIEWS, $allData);
-         }
-      }
-
-
-      saveFileContent('reviews.txt', $allData);
-   }
 
    public function getId()
    {
