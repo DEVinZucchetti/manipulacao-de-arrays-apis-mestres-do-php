@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'utils.php';
+require_once 'config/config.php';
+require_once 'utils/utils.php';
 
 $method = $_SERVER["REQUEST_METHOD"];
 
@@ -13,7 +13,7 @@ if ($method === 'POST') {
     // Filtra e valida os dados recebidos
     $name = filter_var($body->name, FILTER_SANITIZE_SPECIAL_CHARS);
     $contact = filter_var($body->contact, FILTER_SANITIZE_SPECIAL_CHARS);
-    $opening_Hours = filter_var($body->openingHours, FILTER_SANITIZE_SPECIAL_CHARS);
+    $opening_Hours = filter_var($body->opening_Hours, FILTER_SANITIZE_SPECIAL_CHARS);
     $description = filter_var($body->description, FILTER_SANITIZE_SPECIAL_CHARS);
     $latitude = filter_var($body->latitude, FILTER_SANITIZE_NUMBER_FLOAT);
     $longitude = filter_var($body->longitude, FILTER_SANITIZE_NUMBER_FLOAT);
@@ -40,7 +40,7 @@ if ($method === 'POST') {
         'id' => $_SERVER['REQUEST_TIME'],
         'name' => $name,
         'contact' => $contact,
-        'openingHours' => $opening_Hours,
+        'opening_Hours' => $opening_Hours,
         'description' => $description,
         'latitude' => $latitude,
         'longitude' => $longitude
@@ -53,7 +53,7 @@ if ($method === 'POST') {
     saveFileContent(FILE_CITY, $allData);
 
     // Responde com os dados do novo item criado
-    response($data, 201);
+    response($data,201);
 
 // Se o método da requisição for GET e não houver parâmetro 'id'
 } else if ($method === 'GET' && !isset($_GET['id'])) {
