@@ -33,7 +33,7 @@ class PlaceDAO
                 :longitude_value
             )
             ";
-            $statement = ($this->getConnection())->prepare($sql); 
+            $statement = ($this->getConnection())->prepare($sql);
 
             $statement->bindValue(":name_value", $place->getName());
             $statement->bindValue(":contact_value", $place->getContact());
@@ -58,7 +58,7 @@ class PlaceDAO
                          order by name ASC         
         ";
 
-        $statement = ($this->getConnection())->prepare($sql); 
+        $statement = ($this->getConnection())->prepare($sql);
         $statement->execute();
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -67,7 +67,7 @@ class PlaceDAO
     {
         $sql = "SELECT * from api_places_database where id = :id_value";
 
-        $statement = ($this->getConnection())->prepare($sql); 
+        $statement = ($this->getConnection())->prepare($sql);
         $statement->bindValue(":id_value", $id);
         $statement->execute();
 
@@ -79,7 +79,7 @@ class PlaceDAO
         try {
             $sql = "delete from api_places_database where id = :id_value";
 
-            $statement = $this->getConnection()->prepare($sql); 
+            $statement = ($this->getConnection())->prepare($sql);
             $statement->bindValue(":id_value", $id);
             $statement->execute();
 
@@ -105,7 +105,7 @@ class PlaceDAO
                 where id = :id_value
             ";
 
-        $statement = $this->getConnection()->prepare($sql);          
+        $statement = ($this->getConnection())->prepare($sql);
 
         $statement->bindValue(":id_value", $id);
 

@@ -15,8 +15,8 @@ class ReviewDAO
             $sql = "INSERT INTO reviews (name, email, stars, date, status, place_id) 
                             VALUES (:name_value, :email_value, :stars_value, :date_value, :status_value, :place_id_value)";
 
-            $pdo = $this->getConnection();
-            $statement = $pdo->prepare($sql);
+            $statement = ($this->getConnection())->prepare($sql);
+            
             $statement->bindValue(":name_value", $review->getName());
             $statement->bindValue(":email_value", $review->getEmail());
             $statement->bindValue(":stars_value", $review->getStars());
@@ -47,7 +47,7 @@ class ReviewDAO
         $sql = "SELECT * from reviews where id = :id_value";
 
         $statement = ($this->getConnection())->prepare($sql);
-        
+
         $statement->bindValue(":id_value", $id);
         $statement->execute();
 
@@ -64,7 +64,7 @@ class ReviewDAO
                 WHERE id = :id_value
             ";
 
-        $statement = ($this->getConnection())->prepare($sql); 
+        $statement = ($this->getConnection())->prepare($sql);
 
         $statement->bindValue(":id_value", $id);
         $statement->bindValue(
