@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'Database.php';
 class PlaceDAO extends Database
 {
 
