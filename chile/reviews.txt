@@ -1,1 +1,0 @@
-[{"id":"6533fee5f3214","name":"descri\u00e7ao e \ud83d\ude37","email":"contato@minhaempresa.com","stars":1,"status":"PENDENTE","date":"21\/10\/2023 01:10","place_id":1}]
