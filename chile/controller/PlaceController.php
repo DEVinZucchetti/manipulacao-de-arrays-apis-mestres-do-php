@@ -1,6 +1,7 @@
 <?php 
-require_once 'utils.php';
-require_once 'models/Place.php';
+require_once '../utils.php';
+require_once '../models/Place.php';
+require_once '../models/PlaceDAO.php';
 
 class PlaceController {
     public function create(){
@@ -13,40 +14,26 @@ class PlaceController {
         $latitude = filter_var($body->latitude, FILTER_VALIDATE_FLOAT);
         $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
 
-        if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
-            responseError('Faltaram informações essenciais', 400);
-        }
-
-        $allData = readFileContent(CHILE_DADOS);
-
-        $itemWithSameName = array_filter($allData, function ($item) use ($name) {
-            return $item->name === $name;
-        });
-
-        if (count($itemWithSameName) > 0) {
-            responseError('O item já existe', 409);
-        }
-
-        //  foreach ($places as $place) {
-        //     if ($place->name === $name) {
-        //         echo json_encode(['error' => 'Este lugar já está cadastrado.']);
-        //         exit;
-        //     }
-        // }
-
         $place = new Place($name);
         $place->setContact($contact);
         $place->setOpeningHours($opening_hours);
         $place->setDescription($description);
         $place->setLatitude($latitude);
         $place->setLongitude($longitude);
-        $place->save();
+        
+        $placeDAO = new PlaceDAO();
+        $result = $placeDAO->insert($place);
 
-        response(['message' => 'cadastrado com sucesso'], 201);
+        if ($result['success'] === true) {
+            response(["message" => "Cadastrado com sucesso"], 201);
+        } else {
+            responseError("Não foi possível realizar o cadastro", 400);
+        }
     }
     public function list(){
-        $places = (new Place())->list();
-        response ($places, 200);
+        $placeDAO = new PlaceDAO;
+        $result = $placeDAO->findMany();
+        response($result, 200);
     }
 
     public function delete()
@@ -57,10 +44,15 @@ class PlaceController {
             responseError('ID ausente', 400);
         }
 
-        $place = new Place();
-        $place->delete($id);
+        $placeDAO = new PlaceDAO();
+        $result = $placeDAO->deleteOne($id);
 
-        response(['message' => 'Deletado com sucesso'], 204);
+        if($result['success'] === true){
+            response(['message' => 'Deletado com sucesso'], 204);
+        } else{
+            responseError(['message' => 'Erro ao deletar'],400);
+        }
+    
     }
     public function listOne()
     {
@@ -70,11 +62,12 @@ class PlaceController {
             responseError('ID ausente', 400);
         }
 
-        $place = new Place();
-        $item = $place->listOne($id);
+        $placeDAO = new PlaceDAO();
+        $item = $placeDAO->findOne($id);
 
         response($item, 200);
     }
+
     public function update(){
         $body = getBody();
         $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -82,9 +75,9 @@ class PlaceController {
         if (!$id) {
             responseError('ID ausente', 400);
         }
-    
-        $place = new Place();
-        $place->update($id, $body);
+        
+        $placeDAO = new PlaceDAO();
+        $placeDAO->updateOne($id, $body);
     
         response(['message' => 'atualizado com sucesso'], 200);
     }

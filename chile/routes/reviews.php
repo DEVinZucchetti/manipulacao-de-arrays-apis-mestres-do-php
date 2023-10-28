@@ -1,7 +1,7 @@
 <?php
-require_once 'config.php';
-require_once 'utils.php';
-require_once 'models/Review.php';
+require_once '../config.php';
+require_once '../utils.php';
+require_once '../models/Review.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
