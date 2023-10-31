@@ -1,7 +1,8 @@
 <?php
-require_once '../utils/utils.php';
-require_once '../utils/config.php';
+require_once '../utils.php';
+require_once '../config.php';
 require_once '../models/Place.php';
+require_once '../models/PlaceDAO.php';
 
 
 
@@ -21,7 +22,7 @@ class PlaceController{
             responseError('Faltaram informacoes essenciais', 400);
         }
     
-        $allData = readFileContent(FILE_CITY);
+     /*   $allData = readFileContent(FILE_CITY);
     
         $itemWithSameName = array_filter($allData, function ($item) use ($name) {
             return $item->name === $name;
@@ -29,7 +30,7 @@ class PlaceController{
     
         if (count($itemWithSameName) > 0) {
             responseError('O item já existe', 409);
-        }
+        }*/
     
     
       $place = new Place($name);
@@ -38,10 +39,17 @@ class PlaceController{
       $place->setDescription($description);
       $place->setLatitude($latitude);
       $place->setLongitude($longitude);
-      $place->save();
-      response(['message' => 'cadastrado com sucesso'], 201);
+
+
+      $PlaceDAO = new PlaceDAO();
+     $result = $PlaceDAO->insert($place);
+      if($result['success'] === true) {
+        response(["message" => "Cadastrado com sucesso"], 201);
+    } else {
+        responseError("Não foi possível realizar o cadastro", 400);
     }
 
+}
 
 
     public function list(){

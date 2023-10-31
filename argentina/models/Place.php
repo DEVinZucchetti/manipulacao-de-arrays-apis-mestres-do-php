@@ -1,7 +1,7 @@
 <?php
 
-require_once '../utils/utils.php';
-require_once '../utils/config.php';
+require_once '../utils.php';
+require_once '../config.php';
 
 class Place{
  private $id;
