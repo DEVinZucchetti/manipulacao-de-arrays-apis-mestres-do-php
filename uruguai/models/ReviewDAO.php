@@ -18,14 +18,16 @@ class ReviewDAO
                             place_id,
                             name,
                             email,
-                            stars
+                            stars,
+                            status
                         )
                         values
                         (
                             :place_id_value,
                             :name_value,
                             :email_value,
-                            :stars_value
+                            :stars_value,
+                            :status_value
                         );
         ";
 
@@ -35,6 +37,8 @@ class ReviewDAO
             $statement->bindValue(":name_value", $review->getName());
             $statement->bindValue(":email_value", $review->getEmail());
             $statement->bindValue(":stars_value", $review->getStars());
+            $statement->bindValue(":status_value", $review->getStatus());
+
 
             $statement->execute();
 
@@ -70,12 +74,13 @@ class ReviewDAO
     {
         $placeInDatabase = $this->findOne($id);
 
-        $sql = "update places
+        $sql = "update reviews
                         set 
                             place_id=:place_id_value,
                             name=:name_value,
                             email=:email_value,
                             stars=:stars_value,
+                            status=:status_value
                     where id=:id_value
              ";
 
@@ -110,6 +115,14 @@ class ReviewDAO
                     $data->stars :
                     $placeInDatabase['stars']
             );
+
+            $statement->bindValue(
+                ":status_value",
+                isset($data->status) ?
+                    $data->status :
+                    $placeInDatabase['status']
+            );
+
 
             $statement->execute();
 
