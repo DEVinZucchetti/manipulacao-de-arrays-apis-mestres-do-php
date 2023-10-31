@@ -1,57 +1,50 @@
 <?php
-require_once '../config/config.php';
+require_once '../utils/utils.php';
 require_once '../models/Place.php';
+require_once '../DAO/PlaceDAO.php';
 
-
-class PlaceController
-{
+class PlaceController{
     public function create()
     {
         $body = getBody();
 
-        $name = sanitizeString($body->name);
-        $contact = sanitizeString($body->contact);
-        $opening_hours = sanitizeString($body->opening_hours);
-        $description = sanitizeString($body->description);
-        $latitude = filter_var($body->latitude, FILTER_VALIDATE_FLOAT);
-        $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
+        $name = sanitizeInput($body,'name',FILTER_SANITIZE_SPECIAL_CHARS);
+        $contact = sanitizeInput($body,'contact',FILTER_SANITIZE_SPECIAL_CHARS);
+        $opening_hours =sanitizeInput($body,'opening_hours',FILTER_SANITIZE_SPECIAL_CHARS);
+        $description = sanitizeInput($body,'description',FILTER_SANITIZE_SPECIAL_CHARS);
+        $latitude = sanitizeInput($body,'latitude', FILTER_VALIDATE_FLOAT);
+        $longitude = sanitizeInput($body,'longitude', FILTER_VALIDATE_FLOAT);
 
-        if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
-            responseError('Faltaram informações essenciais', 400);
-        }
+        if (!$name) responseError("O nome é obrigatório", 400);
+        if(!$contact) responseError("O contato é obrigatório", 400);
+        if(!$opening_hours) responseError("A hora de funcionamento é obrigatório", 400);
+        if(!$description) responseError("A descrição é obrigatório", 400);
+        if(!$latitude) responseError("A latitude é obrigatório", 400);
+        if(!$longitude) responseError("A logitude é obrigatório", 400);
 
-        $allData = readFileContent(FILE_CITY);
-
-        $itemWithSameName = array_filter($allData, function ($item) use ($name) {
-            return $item->name === $name;
-        });
-
-        if (count($itemWithSameName) > 0) {
-            responseError('O item já existe', 409);
-        }
-
-        //  foreach ($places as $place) {
-        //     if ($place->name === $name) {
-        //         echo json_encode(['error' => 'Este lugar já está cadastrado.']);
-        //         exit;
-        //     }
-        // }
-
-        $place = new Place($name);
+        $place = new Place($name);        
         $place->setContact($contact);
         $place->setOpeningHours($opening_hours);
         $place->setDescription($description);
         $place->setLatitude($latitude);
         $place->setLongitude($longitude);
-        $place->save();
 
-        response(['message' => 'cadastrado com sucesso'], 201);
+        $result = $placeDAO = new PlaceDAO();
+        $result->create($place);
+
+        if ($result['success'] === true) {
+            response(["message" => "Cadastrado com sucesso"], 201);
+        } else {
+            responseError("Não foi possível realizar o cadastro", 400);
+        }
     }
-    public function list()
+    public function listAll()
     {
-        $places = (new Place())->list();
-        response($places, 200);
+        $placeDAO = new PlaceDAO;
+        $places = $placeDAO->findAll();
+        response($places,200);
     }
+    
     public function delete()
     {
         $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -60,12 +53,12 @@ class PlaceController
             responseError('ID ausente', 400);
         }
 
-        $place = new Place();
-        $place->delete($id);
+        $placeDAO = new PlaceDAO();
+        $placeDAO ->delete($id);
 
         response(['message' => 'Deletado com sucesso'], 204);
     }
-    public function listOne()
+    public function findById()
     {
         $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -73,21 +66,21 @@ class PlaceController
             responseError('ID ausente', 400);
         }
 
-        $place = new Place();
-        $item = $place->listOne($id);
+        $PlaceDAO = new PlaceDAO();
+        $item = $PlaceDAO->findByID($id);
 
         response($item, 200);
-    }
-    public function update(){
+    }  
+    
+    public function updatePlace(){
         $body = getBody();
-        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
     
         if (!$id) {
             responseError('ID ausente', 400);
-        }
-    
-        $place = new Place();
-        $place->update($id, $body);
+        }        
+        $placeDAO = new PLaceDAO();
+        $placeDAO->updateOne($id, $body);
     
         response(['message' => 'atualizado com sucesso'], 200);
     }
