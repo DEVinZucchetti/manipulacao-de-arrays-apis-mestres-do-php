@@ -1,15 +1,10 @@
 <?php
 
-class ReviewDAO
+require_once '../models/Database.php';
+
+
+class ReviewDAO extends Database
 {
-
-    private $connection;
-
-    public function __construct()
-    {
-        $this->connection = new PDO("pgsql:host=localhost;dbname=api_places_database", "docker", "docker");
-    }
-
     public function insert(Review $review)
     {
         try {
@@ -127,10 +122,5 @@ class ReviewDAO
             $statement->execute();
 
             return ['success' => true];
-    }
-
-    public function getConnection()
-    {
-        return $this->connection;
     }
 }

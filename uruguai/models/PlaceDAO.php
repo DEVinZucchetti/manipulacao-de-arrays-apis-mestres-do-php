@@ -1,15 +1,9 @@
 <?php
 
-class PlaceDAO
+require_once '../models/Database.php';
+
+class PlaceDAO extends Database
 {
-
-    private $connection;
-
-    public function __construct()
-    {
-        $this->connection = new PDO("pgsql:host=localhost;dbname=api_places_database", "docker", "docker");
-    }
-
     public function insert(Place $place)
     {
         try {
@@ -146,10 +140,5 @@ class PlaceDAO
             $statement->execute();
 
             return ['success' => true];
-    }
-
-    public function getConnection()
-    {
-        return $this->connection;
     }
 }
