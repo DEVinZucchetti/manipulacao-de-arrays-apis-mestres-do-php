@@ -1,6 +1,7 @@
 <?php
-require_once 'utils.php';
+require_once '../utils.php';    
 require_once '../models/Place.php';
+require_once '../models/PlaceDAO.php';
 
 class PlaceController
 {
@@ -20,18 +21,8 @@ class PlaceController
             responseError('Faltaram informações essenciais', 400);
         }
 
-        /* $allData = readFileContent(FILE_CITY);
 
-        $itemWithSameName = array_filter($allData, function ($item) use ($name) {
-            return $item->name === $name;
-        });
-
-        if (count($itemWithSameName) > 0) {
-            responseError('O item já existe', 409);
-        }*/
-
-        $place = new Place();
-        $place->setContact($name);
+        $place = new Place($name);      
         $place->setContact($contact);
         $place->setOpening_hours($opening_hours);
         $place->setDescription($description);
@@ -52,8 +43,8 @@ class PlaceController
     public function listAll()
     {
         $placeDAO = new PlaceDAO();
-        $place = $placeDAO->findMany();
-        response($place, 200);
+        $places = $placeDAO->findMany();
+        response($places, 200);
     }
 
 
@@ -73,28 +64,20 @@ class PlaceController
     }
 
 
-    public function deleteOne()
+    public function delete()
     {
         $id = sanitizeInput($_GET, 'id', FILTER_VALIDATE_INT, false);
 
-        if (!$id) responseError('O id é inválido', 400);
+        if (!$id) responseError('O id não encontrado', 400);
 
         $placeDAO = new PlaceDAO();
-
-        $placeExists = $placeDAO->findOne($id);
-
-        if (!$placeExists) responseError('Não foi encontrado um lugar com esse id', 404);
-
-        $result = $placeDAO->deleteOne($id);
-
-        if ($result['success'] === true) {
-            response([], 204);
-        } else {
-            responseError('Não foi possível deletar o item', 400);
+        $placeDAO->deleteOne($id);
+        
+            response(['message' => 'Lugar deletado com sucesso'], 204);
         }
-    }
+    
 
-    public function updateOne()
+    public function update()
     {
         $id = sanitizeInput($_GET, 'id', FILTER_VALIDATE_INT, false);
         $body = getBody();

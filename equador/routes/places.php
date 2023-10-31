@@ -12,7 +12,7 @@ if ($method === 'POST') {
 } else if($method === 'GET' && $_GET['id']) {
     $controller->listOne();
 } else if($method === 'DELETE') {
-    $controller->deleteOne();
+    $controller->delete();
 } else if($method === "PUT") {
-    $controller->updateOne();
+    $controller->update();
 }

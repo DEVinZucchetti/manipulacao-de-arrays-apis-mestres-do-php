@@ -1,5 +1,5 @@
 <?php
-require_once './Connections.php';
+//require_once '../Connections.php';
 
 class PlaceDAO
 {
@@ -8,7 +8,8 @@ class PlaceDAO
 
     public function __construct()
     {
-        $this->connection = new Connections();
+        $this->connection = new PDO("pgsql:host=localhost;dbname=api_places_database", "docker", "docker");
+        //$this->connection = new Connections();
     }
 
     public function insert(Place $place)
@@ -33,7 +34,9 @@ class PlaceDAO
                 :longitude_value
             )
             ";
-            $statement = ($this->getConnection())->prepare($sql);
+            $connection = $this->getConnection();
+            $statement = $connection->prepare($sql);
+            //$statement = ($this->getConnection())->prepare($sql);
 
             $statement->bindValue(":name_value", $place->getName());
             $statement->bindValue(":contact_value", $place->getContact());
@@ -52,22 +55,22 @@ class PlaceDAO
     }
     public function findMany()
     {
-        $sql = "select
-                    *  
-                    from places                           
-                         order by name ASC         
-        ";
+        $sql = "select * from places order by name ASC";
 
-        $statement = ($this->getConnection())->prepare($sql);
+        $connection = $this->getConnection();
+        $statement = $connection->prepare($sql);
+        //$statement = ($this->getConnection())->prepare($sql);
         $statement->execute();
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     public function findOne($id)
     {
-        $sql = "SELECT * from api_places_database where id = :id_value";
+        $sql = "SELECT * from places where id = :id_value";
 
-        $statement = ($this->getConnection())->prepare($sql);
+        $connection = $this->getConnection();
+        $statement = $connection->prepare($sql);
+        //$statement = ($this->getConnection())->prepare($sql);
         $statement->bindValue(":id_value", $id);
         $statement->execute();
 
@@ -77,9 +80,11 @@ class PlaceDAO
     public function deleteOne($id)
     {
         try {
-            $sql = "delete from api_places_database where id = :id_value";
+            $sql = "delete from places where id = :id_value";
 
-            $statement = ($this->getConnection())->prepare($sql);
+            $connection = $this->getConnection();
+            $statement = $connection->prepare($sql);
+            //$statement = ($this->getConnection())->prepare($sql);
             $statement->bindValue(":id_value", $id);
             $statement->execute();
 
@@ -94,7 +99,7 @@ class PlaceDAO
     {
         $placeInDatabase = $this->findOne($id);
 
-        $sql = "update api_places_database 
+        $sql = "update places
                         set 
                         name=:name_value,                         
                         contact=:contact_value, 
@@ -105,7 +110,9 @@ class PlaceDAO
                 where id = :id_value
             ";
 
-        $statement = ($this->getConnection())->prepare($sql);
+        $connection = $this->getConnection();
+        $statement = $connection->prepare($sql);
+        //$statement = ($this->getConnection())->prepare($sql);
 
         $statement->bindValue(":id_value", $id);
 

@@ -5,8 +5,9 @@ class ReviewDAO
     private $connection;
 
     public function __construct()
-    {
-        $this->connection = new Connections();
+    {   
+        $this->connection = new PDO("pgsql:host=localhost;dbname=api_places_database", "docker", "docker");
+        //$this->connection = new Connections();
     }
 
     public function insert(Review $review)
@@ -15,6 +16,7 @@ class ReviewDAO
             $sql = "INSERT INTO reviews (name, email, stars, date, status, place_id) 
                             VALUES (:name_value, :email_value, :stars_value, :date_value, :status_value, :place_id_value)";
 
+            
             $statement = ($this->getConnection())->prepare($sql);
             
             $statement->bindValue(":name_value", $review->getName());
@@ -28,7 +30,7 @@ class ReviewDAO
 
             return ['success' => true];
         } catch (PDOException $error) {
-            debug($error->getMessage());
+           
             return ['success' => false];
         }
     }

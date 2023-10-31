@@ -1,5 +1,5 @@
 <?php
-
+/*
 class Connections
 {
 
@@ -31,4 +31,4 @@ class Connections
             die("Erro na conexão com o banco de dados: " . $e->getMessage());
         }
     }
-}
+}*/
