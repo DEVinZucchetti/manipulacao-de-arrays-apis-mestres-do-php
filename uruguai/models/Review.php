@@ -1,5 +1,5 @@
 <?php 
-require_once './utils.php';
+require_once '../utils.php';
 
 class Review
 {
@@ -25,20 +25,34 @@ class Review
             'date' => $this->getDate()
         ];
 
-        $allData = readFileContent('avaliacoes.txt');
-        array_push($allData, $data);
-        saveFileContent('avaliacoes.txt', $allData);
+        $allData = readFileContent('reviews.txt');
+        array_push($allData,  $data);
+        saveFileContent('reviews.txt', $allData);
     }
 
     public function list()
     {
-        $allData = readFileContent('avaliacoes.txt');
+        $allData = readFileContent('reviews.txt');
 
-        $filtered = array_values(array_filter($allData, function ($review) {            
+        $filtered = array_values(array_filter($allData, function ($review) {
             return $review->place_id === $this->getPlaceId();
         }));
 
         return $filtered;
+    }
+
+    public function updateStatus($id, $status)
+    {
+        $allData = readFileContent('reviews.txt');
+
+        foreach ($allData  as $review) {
+            if ($review->id === $id) {
+                $review->status = $status;
+                saveFileContent(FILE_REVIEWS, $allData);
+            }
+        }
+       
+        saveFileContent('reviews.txt', $allData);
     }
 
     public function getId()
