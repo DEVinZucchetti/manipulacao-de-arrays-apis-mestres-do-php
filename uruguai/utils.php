@@ -41,3 +41,15 @@ function sanitizeInput($data, $property, $filterType, $isObject = true) {
     return isset($data[$property]) ? filter_var($data[$property], $filterType) : null;
   }
 }
+
+function sanitizeString($value)
+{
+  return filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+}
+
+function debug($content)
+{
+  echo '<pre>';
+  echo var_dump($content);
+  echo '</pre>';
+}
