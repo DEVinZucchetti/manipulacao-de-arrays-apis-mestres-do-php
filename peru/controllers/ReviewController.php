@@ -1,11 +1,11 @@
 <?php
-require_once 'utils/utils.php';
-require_once 'models/Review.php';
+require_once '../utils/utils.php';
+require_once '../models/Review.php';
+require_once '../DAO/ReviewDAO.php';
 
 class ReviewController
 {
-
-    public function create()
+        public function create()
     {
         $body = getBody();
 
@@ -33,35 +33,73 @@ class ReviewController
         $review->setName($name);
         $review->setEmail($email);
         $review->setStars($stars);
-        $review->save();
+        $reviewDAO = new ReviewDAO();
+        $result = $reviewDAO->create($review);
 
-        response(201, ['message' => "Cadastrado com sucesso"]);
+        if ($result['success'] === true) {
+            response(["message" => "Cadastrado com sucesso"], 201);
+        } else {
+            responseError("Não foi possível realizar o cadastro", 400);
+        }
     }
 
-    public function list()
-    {
+    public function findDyId(){
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $place_id = sanitizeInput($_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS, false);
-        if (!$place_id) {
-            responseError(400, 'Id do lugar ausente');
+        if (!$id) {
+            responseError('ID ausente', 400);
         }
-        $reviews = new Review($place_id);
-        response(200, $reviews->list());
+        $reviewDAO = new ReviewDAO();
+        $item = $reviewDAO->findById($id);
+
+        response($item, 200);
+    }
+    public function listAll()
+    {
+        $reviewDAO = new ReviewDAO();
+        $reviews = $reviewDAO->findAll();
+        response($reviews,200);      
+    }
+    public function delete(){
+        $id = filter_var($_GET['id'],FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if(!$id){
+            responseError('ID ausente',400);
+        }
+        $reviewDAO = new ReviewDAO();
+        $reviewDAO->delete($id);
+        response(['message'=> 'deletado con sucesso'],204);
+
+    }
+
+    public function updateStatus(){
+        $body = getBody();
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $status = sanitizeInput($body,'status', FILTER_SANITIZE_SPECIAL_CHARS);
+
+
+        if (!$id) {
+            responseError('ID ausente', 400);
+        }
+
+        $reviewDAO = new ReviewDAO();
+        $reviewDAO->updateStatus($id, $status);
+
+        response(['message' => 'atualizado com sucesso'], 200);
     }
 
     public function update()
     {
-
         $body = getBody();
-        $id = sanitizeInput($_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
-        $status = sanitizeInput($body, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if (!$status) {
-            responseError(400, 'Status ausente');
+        if (!$id) {
+            responseError('ID ausente', 400);
         }
 
-        $review = new Review();
-        $review->updateStatus($id, $status);
-        response(200, ['message' => 'Atualizado com sucesso']);
+        $reviewDAO = new ReviewDAO();
+        $reviewDAO->updateOne($id, $body);
+
+        response(['message' => 'atualizado com sucesso'], 200);
     }
 }
