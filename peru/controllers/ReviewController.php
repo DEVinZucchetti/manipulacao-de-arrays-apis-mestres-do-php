@@ -33,8 +33,8 @@ class ReviewController
         $review->setName($name);
         $review->setEmail($email);
         $review->setStars($stars);
-        $result = $reviewDAO = new ReviewDAO();
-        $reviewDAO->create($review);
+        $reviewDAO = new ReviewDAO();
+        $result = $reviewDAO->create($review);
 
         if ($result['success'] === true) {
             response(["message" => "Cadastrado com sucesso"], 201);
@@ -71,6 +71,23 @@ class ReviewController
         response(['message'=> 'deletado con sucesso'],204);
 
     }
+
+    public function updateStatus(){
+        $body = getBody();
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $status = sanitizeInput($body,'status', FILTER_SANITIZE_SPECIAL_CHARS);
+
+
+        if (!$id) {
+            responseError('ID ausente', 400);
+        }
+
+        $reviewDAO = new ReviewDAO();
+        $reviewDAO->updateStatus($id, $status);
+
+        response(['message' => 'atualizado com sucesso'], 200);
+    }
+
     public function update()
     {
         $body = getBody();

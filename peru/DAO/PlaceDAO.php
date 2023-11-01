@@ -15,10 +15,10 @@ class PLaceDAO
                 (
                     name,
                     contact,
-                    opening_Hours,
+                    opening_hours,
                     description,
                     latitude,
-                    longitude,
+                    longitude
                 ) 
                 values
                 (
@@ -27,21 +27,22 @@ class PLaceDAO
                     :opening_Hours_value,
                     :description_value,
                     :latitude_value,
-                    :longitude_value,
+                    :longitude_value
                 );
             ";
 
             $statement = ($this->getConnection())->prepare($sql);
-            $statement->bindValue('name_value', $place->getName());
-            $statement->bindValue('contact_value', $place->getContact());
-            $statement->bindValue('opening_Hours_value', $place->getOpeningHours());
-            $statement->bindValue('descriptin_value', $place->getDescription());
-            $statement->bindValue('latitude_value', $place->getLatitude());
-            $statement->bindValue('longitude_value', $place->getLongitude());
+            $statement->bindValue(':name_value', $place->getName());
+            $statement->bindValue(':contact_value', $place->getContact());
+            $statement->bindValue(':opening_Hours_value', $place->getOpeningHours());
+            $statement->bindValue(':description_value', $place->getDescription());
+            $statement->bindValue(':latitude_value', $place->getLatitude());
+            $statement->bindValue(':longitude_value', $place->getLongitude());
             $statement->execute();
 
             return ['success' => true];
         } catch (PDOException $error) {
+            debug($error->getMessage());
             return ['success' => false];
         }
     }

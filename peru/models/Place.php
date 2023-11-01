@@ -5,7 +5,7 @@ class Place
     public $id;
     private $name;
     private $contact;
-    private $opening_hours;
+    private $opening_Hours;
     private $description;
     private $latitude;
     private $longitude;
@@ -32,11 +32,11 @@ class Place
     }
     public function getOpeningHours()
     {
-        return $this->opening_hours;
+        return $this->opening_Hours;
     }
-    public function setOpeningHours($opening_hours)
+    public function setOpeningHours($opening_Hours)
     {
-        $this->opening_hours = $opening_hours;
+        $this->opening_Hours = $opening_Hours;
     }
     public function getDescription()
     {

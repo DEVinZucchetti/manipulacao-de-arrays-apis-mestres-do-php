@@ -58,6 +58,7 @@ class ReviewDAO
         $sql = "SELECT * FROM reviews where id = :id_value";
 
         $statement = ($this->getConnection())->prepare($sql);
+
         $statement->bindValue(":id_value", $id);
         $statement->execute();
 
@@ -65,6 +66,7 @@ class ReviewDAO
     }
     public function updateStatus($id, $status)
     {
+        var_dump($status);
         try {    
             $sql = "UPDATE reviews 
                 SET status = 
@@ -166,7 +168,8 @@ class ReviewDAO
             debug($error->getMessage());
             return ['success' => false];
         }
-    }        
+    }   
+         
         public function getConnection()
         {
             return $this->connection;

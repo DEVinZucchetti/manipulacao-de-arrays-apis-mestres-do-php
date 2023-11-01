@@ -27,8 +27,7 @@ function responseError($message, $status)
   exit;
 }
 
-function response($response, $status)
-{
+function response($response, $status){
   http_response_code($status);
   echo json_encode($response);
   exit;

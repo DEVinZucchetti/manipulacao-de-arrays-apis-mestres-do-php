@@ -1,6 +1,6 @@
 <?php 
 require_once '../config/config.php';
-require_once '../controllers/PlaceController.php';
+require_once '../controllers/ReviewController.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $controller = new ReviewController();
@@ -14,6 +14,7 @@ if ($method === 'POST') {
 } else if ($method === 'GET' && $_GET['id']) {
     $controller->findDyId();
 } else if ($method === 'PUT') {
-   $controller->update();
+//    $controller->update();
+   $controller->updateStatus();
 }
 ?>
