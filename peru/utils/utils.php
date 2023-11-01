@@ -40,11 +40,18 @@ function debug($content)
   echo '</pre>';
 }
 
+
+function response($response,$status){
+ return http_response_code($status);
+    echo json_encode($response);
+    exit;
+}
+
 function sanitizeInput($data, $property, $filterType, $isObject = true) {
   if($isObject) {
-    return isset($data->$property) ? filter_var($data->$property, $filterType) : null;
+      return isset($data->$property) ? filter_var($data->$property, $filterType) : null;    
   } else {
-    return isset($data[$property]) ? filter_var($data[$property], $filterType) : null;
+      return isset($data[$property]) ? filter_var($data[$property], $filterType) : null; 
   }
- 
+
 }

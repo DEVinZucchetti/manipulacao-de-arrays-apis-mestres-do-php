@@ -1,9 +1,13 @@
 <?php
 require_once '../utils/utils.php';
+
 require_once '../models/Place.php';
 require_once '../DAO/PlaceDAO.php';
 
-class PlaceController{
+
+class PlaceController
+{
+
     public function create()
     {
         $body = getBody();

@@ -1,1 +1,1 @@
-[]
+[{"id":1697500121,"name":"cidade 04","contact":"31-9999-9999","opening_hours":"8","description":"Descricao do Lugar","latitude":123.456789,"longitude":-45.678901}]

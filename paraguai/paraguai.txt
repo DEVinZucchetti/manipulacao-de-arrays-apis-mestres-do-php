@@ -1,1 +1,11 @@
-[]
+[
+    {
+        "id": 1697375187,
+        "name": "Asuncion",
+        "contact": "4004-5412",
+        "opening_hours": "Sempre aberto",
+        "description": "Capital do Paraguai",
+        "latitude": -1.5626525,
+        "longitude": 1.5156154
+    }
+]
