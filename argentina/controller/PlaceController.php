@@ -53,7 +53,8 @@ class PlaceController{
 
 
     public function list(){
-        $places = (new Place())->list();
+        $PlaceDAO = new PlaceDAO();
+        $places = $PlaceDAO->findMany();
         response($places, 200);
    
     }
