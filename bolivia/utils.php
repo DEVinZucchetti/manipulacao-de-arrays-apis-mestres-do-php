@@ -17,14 +17,16 @@ function sanitizeString($value){
   return filter_var($value,FILTER_SANITIZE_SPECIAL_CHARS);
 }
 
-function responseError($message,$status){
-  return    http_response_code($status);
-    echo json_encode(['error' => $message]); 
-    exit;
+function responseError($message, $status){
+  echo json_encode(['error' => $message]);
+  http_response_code($status);
+  
+  exit;
 }
 
 function response($response,$status){
- return http_response_code($status);
-    echo json_encode($response);
+  echo json_encode($response);
+   http_response_code($status);
+    
     exit;
 }

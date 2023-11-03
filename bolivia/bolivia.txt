@@ -1,1 +1,1 @@
-[]
+[{"id":1698971667,"name":"Parque Nacional Ambor\u00f3","contact":"15485875624","opening_hours":"10:00 \u00e0s 22:00","description":"\u00c9 uma reserva natural com mais de 912 esp\u00e9cies de aves, mais de 177 esp\u00e9cies de mam\u00edferos, incluindo puma, jaguatirica e o raro urso de \u00f3culos.","latitude":"15986254325","longitude":"0587231547"}]
