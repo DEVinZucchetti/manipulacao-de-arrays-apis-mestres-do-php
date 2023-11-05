@@ -5,3 +5,5 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // habi
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
 
 define('PLACES', 'bolivia.txt');
+define('BOLIVIA_FILE_REVIEWS', 'boliviaReviews.txt');
+date_default_timezone_set('America/Sao_Paulo');
