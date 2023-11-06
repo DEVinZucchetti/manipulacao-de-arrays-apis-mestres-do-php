@@ -25,11 +25,12 @@ function responseError($message, $status)
 {
   http_response_code($status);
   echo json_encode(['error' => $message]);
+  exit;
 }
 
 function response($response, $status)
 {
-  return http_response_code($status);
+  http_response_code($status);
   echo json_encode($response);
   exit;
 }
