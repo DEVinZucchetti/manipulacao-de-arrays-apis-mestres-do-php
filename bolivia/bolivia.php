@@ -22,5 +22,21 @@ if ($method === 'POST') {
     if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
        responseError('Preencha todos os campos', 400);
     }
+
+    // Crie um array associativo com os dados filtrados
+    $data = [
+        'name' => $name,
+        'contact' => $contact,
+        'opening_hours' => $opening_hours,
+        'description' => $description,
+        'latitude' => $latitude,
+        'longitude' => $longitude
+    ];
+
+    $allData = readFileContent(LOCAIS);
+    array_push($allData, $data);
+    saveFileContent(LOCAIS, $allData);
+
+    response($data, 201);
 }
 ?>
