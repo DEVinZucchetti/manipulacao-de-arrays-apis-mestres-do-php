@@ -38,5 +38,8 @@ if ($method === 'POST') {
     saveFileContent(LOCAIS, $allData);
 
     response($data, 201);
+}else if($method === 'GET'){
+    $allData = readFileContent(LOCAIS);
+    response($allData, 200);
 }
 ?>
