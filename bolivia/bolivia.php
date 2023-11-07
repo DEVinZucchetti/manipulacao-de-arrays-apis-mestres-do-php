@@ -23,8 +23,20 @@ if ($method === 'POST') {
        responseError('Preencha todos os campos', 400);
     }
 
+
+    $allData = readFileContent(LOCAIS);
     // Crie um array associativo com os dados filtrados
+
+    $itemWithSameName = array_filter($allData, function ($item) use ($name) {
+        return $item->name === $name;
+    });
+
+    if (count($itemWithSameName) > 0) {
+        responseError('O item já existe', 409);
+    }
+    
     $data = [
+        'id' => $_SERVER['REQUEST_TIME'],
         'name' => $name,
         'contact' => $contact,
         'opening_hours' => $opening_hours,
@@ -33,7 +45,7 @@ if ($method === 'POST') {
         'longitude' => $longitude
     ];
 
-    $allData = readFileContent(LOCAIS);
+   
     array_push($allData, $data);
     saveFileContent(LOCAIS, $allData);
 
