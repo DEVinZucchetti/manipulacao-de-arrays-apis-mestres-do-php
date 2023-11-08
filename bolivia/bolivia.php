@@ -53,5 +53,24 @@ if ($method === 'POST') {
 }else if($method === 'GET'){
     $allData = readFileContent(LOCAIS);
     response($allData, 200);
+}else if ($method === 'DELETE') {
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        responseError('ID ausente', 400);
+    }
+
+    $allData = readFileContent(LOCAIS);
+
+    $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
+        return $item->id !== $id;
+    }));
+
+    var_dump($itemsFiltered);
+
+    saveFileContent(LOCAIS, $itemsFiltered);
+
+    response(['message' => 'Deletado com sucesso'], 204);
+
 }
 ?>
