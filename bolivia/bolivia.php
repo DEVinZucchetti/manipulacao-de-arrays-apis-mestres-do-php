@@ -50,7 +50,7 @@ if ($method === 'POST') {
     saveFileContent(LOCAIS, $allData);
 
     response($data, 201);
-}else if($method === 'GET'){
+}else if($method === 'GET' && !isset($_GET['id'])) {
     $allData = readFileContent(LOCAIS);
     response($allData, 200);
 }else if ($method === 'DELETE') {
@@ -72,5 +72,19 @@ if ($method === 'POST') {
 
     response(['message' => 'Deletado com sucesso'], 204);
 
+}else if ($method === 'GET' && $_GET['id']) {
+    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        responseError('ID ausente', 400);
+    }
+
+    $allData = readFileContent(LOCAIS);
+
+    foreach ($allData as $item) {
+        if ($item->id === $id) {
+            response($item, 200);
+        }
+    }
 }
 ?>
