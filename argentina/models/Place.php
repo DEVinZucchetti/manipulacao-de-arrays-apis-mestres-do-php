@@ -38,18 +38,7 @@ public function list(){
     $allData = readFileContent(FILE_CITY);
     return $allData;
 }
-public function delete($id){
-   
 
-    $allData = readFileContent(FILE_CITY);
-
-  
-    $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
-        return $item->id !== $id;
-    }));
-  
-    saveFileContent(FILE_CITY, $itemsFiltered);
-}
 public function update($id, $data){
     
     $allData = readFileContent(FILE_CITY);
@@ -76,6 +65,18 @@ public function listOne($id)
            return $item;
         }
     }
+}
+public function delete($id){
+   
+
+    $allData = readFileContent(FILE_CITY);
+
+  
+    $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
+        return $item->id !== $id;
+    }));
+  
+    saveFileContent(FILE_CITY, $itemsFiltered);
 }
 
  public function getId()
