@@ -1,7 +1,9 @@
 <?php
-require_once '../utils/utils.php';
-require_once '../utils/config.php';
+
+require_once '../utils.php';
+require_once '../config.php';
 require_once '../models/Review.php';
+require_once '../models/ReviewDAO.php';
 
 
 class ReviewController{
@@ -34,38 +36,44 @@ class ReviewController{
         $review->setStars($stars);
         
     
-    
-        $review->saveReview();
+        $reviewDAO = new ReviewDAO;
+        $reviewDAO->create($review);
     
         response(['message' => 'cadastrado com sucesso'],201 );
     }   
-
+    
+    
     public function list(){
+        $reviewDAO = new ReviewDAO();
+        $review = $reviewDAO->findMany();
+        response($review, 200);
+   
+    }
+
+    public function listOne(){
         
-        $place_id = sanitizeInput($_GET,'id',FILTER_VALIDATE_INT, false);
+        $id = sanitizeInput($_GET,'id',FILTER_VALIDATE_INT, false);
 
-        if(!$place_id) responseError('ID do lugar não informado',400);
+        if(!$id) responseError('ID do lugar não informado',400);
 
-        $reviews = new Review($place_id);
+        $reviewDAO = new ReviewDAO($id);
 
-        response($reviews->list(), 200);
+        response($reviewDAO->findOne($id), 200);
 
     }
     public function update(){
         $body = getBody();
-        $id =  sanitizeInput($_GET, 'id', FILTER_VALIDATE_INT, false);
-    
-        $status = sanitizeInput($body,  'status', FILTER_SANITIZE_SPECIAL_CHARS);
-    
-        if (!$status) {
-            responseError('Sem status', 400);
-        }
-    
-        $review = new Review();
-        $review->updateStatus($id, $status);
+      $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
-        response(200, ['message' => 'Atualizado com sucesso!']);
-        }
+      if (!$id) {
+         responseError('ID ausente', 400);
+      }
+
+      $reviewDAO = new ReviewDAO();
+      $reviewDAO->update($id, $body);
+
+      response(['message' => 'atualizado com sucesso'], 200);
+   }
     }
 
 

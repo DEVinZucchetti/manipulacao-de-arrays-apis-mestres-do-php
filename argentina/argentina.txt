@@ -1,1 +1,0 @@
-[{"id":1696893608,"name":"Canoas","contact":"55555555","opening_hours":" 08:00 \/ 12:00","description":"teste","latitude":1,"longitude":1},{"id":1697386023,"name":"Hiper Xis","contact":"55555555","opening_hours":" 08:00 \/ 12:00","description":"teste","latitude":1,"longitude":1}]
