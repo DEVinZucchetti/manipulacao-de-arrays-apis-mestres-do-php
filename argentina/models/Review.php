@@ -1,7 +1,8 @@
 <?php 
 
-require_once '../utils/utils.php';
-require_once '../utils/config.php';
+require_once '../utils.php';
+require_once '../config.php';
+
  class Review{
 
     private $id, $name , $email, $stars , $date, $status , $place_Id;

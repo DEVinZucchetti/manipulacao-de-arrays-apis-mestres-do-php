@@ -5,7 +5,7 @@ class PlaceDAO
 
     private $connection;
 
-    public function __construct($name = null, $race_id = null)
+    public function __construct( )
     {
         $this->connection = new PDO("pgsql:host=localhost;dbname=api_places_database", "docker", "docker");
     }
