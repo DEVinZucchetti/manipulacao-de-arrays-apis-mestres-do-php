@@ -5,7 +5,7 @@
         "contact": "15485875624",
         "opening_hours": "10:00 \u00e0s 22:00",
         "description": "\u00c9 uma reserva natural com mais de 912 esp\u00e9cies de aves, mais de 177 esp\u00e9cies de mam\u00edferos, incluindo puma, jaguatirica e o raro urso de \u00f3culos.",
-        "latitude": 0.000000000,
-        "longitude": 0.000000000
+        "latitude": -17.816227346864807,
+        "longitude": -63.632262706595206
     }
 ]
