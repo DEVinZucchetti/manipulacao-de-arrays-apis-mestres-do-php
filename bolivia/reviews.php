@@ -1,7 +1,7 @@
 <?php 
 require_once 'config.php';
 require_once 'utils.php';
-require_once 'models/Review.php';
+require_once 'reviews.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -20,5 +20,10 @@ if ($method === 'POST') {
     if (!$email) responseError('Email Obrigatorio', 400);
     if (!$stars) responseError('Quantidade de estrelas obrigatorio', 400);
     if (!$status) responseError('Status Obrigatorio', 400);
+
+
+    if (strlen($name) > 200) {
+        responseError('Nome maios que 200 caracteres', 400);
+    }
 }
 ?>
