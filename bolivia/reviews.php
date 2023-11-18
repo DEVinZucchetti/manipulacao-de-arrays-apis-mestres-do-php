@@ -14,5 +14,11 @@ if ($method === 'POST') {
     $stars = sanitizeInput($body, 'stars', FILTER_VALIDATE_FLOAT);
     $date = (new DateTime())->format('d/m/y H:i:');
     $status = sanitizeInput($body, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!$place_id) responseError('ID Obrigatorio', 400);
+    if (!$name) responseError('Descrição obrigatoria', 400);
+    if (!$email) responseError('Email Obrigatorio', 400);
+    if (!$stars) responseError('Quantidade de estrelas obrigatorio', 400);
+    if (!$status) responseError('Status Obrigatorio', 400);
 }
 ?>
