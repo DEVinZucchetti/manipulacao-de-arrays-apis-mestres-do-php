@@ -1,9 +1,11 @@
 <?php 
 require_once 'config.php';
 require_once 'utils.php';
-require_once 'reviews.php';
+require_once 'models/Review.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+$blacklist = ['polimorfismo', 'herança', 'Abstração', 'Encapsulamento'];
 
 if ($method === 'POST') {
     $body = getBody();
@@ -25,5 +27,21 @@ if ($method === 'POST') {
     if (strlen($name) > 200) {
         responseError('Nome maios que 200 caracteres', 400);
     }
+
+    foreach ($blacklist as $word) {
+
+        if(str_contains($name, $word)) {
+            $name = str_replace($word, '[EDITADO PELO ADMIN]', $name);
+        }
+    }
+    $review = new Review($place_id);
+
+    $review->setName($name);
+    $review->setEmail($email);
+    $review->setStars($stars);
+    $review->setDate($date);
+    $review->setStatus($Status);
+
+    
 }
 ?>
