@@ -1,6 +1,7 @@
-<?php 
+<?php
 require_once 'config.php';
 require_once 'utils.php';
+require_once 'models/Place.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -20,7 +21,7 @@ if ($method === 'POST') {
 
     // Verifique se algum campo obrigatório está vazio
     if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
-       responseError('Preencha todos os campos', 400);
+        responseError('Preencha todos os campos', 400);
     }
 
 
@@ -34,82 +35,58 @@ if ($method === 'POST') {
     if (count($itemWithSameName) > 0) {
         responseError('O item já existe', 409);
     }
-    
-    $data = [
-        'id' => $_SERVER['REQUEST_TIME'],
-        'name' => $name,
-        'contact' => $contact,
-        'opening_hours' => $opening_hours,
-        'description' => $description,
-        'latitude' => $latitude,
-        'longitude' => $longitude
-    ];
 
-   
-    array_push($allData, $data);
-    saveFileContent(LOCAIS, $allData);
+    $place = new Place($name);
+    $place->setContact($contact);
+    $place->setOpeningHours($opening_hours);
+    $place->setDescription($description);
+    $place->setLatitude($latitude);
+    $place->setLongitude($longitude);
+    $place->save();
 
-    response($data, 201);
-}else if($method === 'GET' && !isset($_GET['id'])) {
-    $allData = readFileContent(LOCAIS);
-    response($allData, 200);
-}else if ($method === 'DELETE') {
+
+
+
+    response(['message' => 'cadastrado com sucesso'], 201);
+
+} else if ($method === 'GET' && !isset($_GET['id'])) {
+    $places = (new Place())->list();
+
+    response($places, 200);
+
+} else if ($method === 'DELETE') {
     $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
     if (!$id) {
         responseError('ID ausente', 400);
     }
 
-    $allData = readFileContent(LOCAIS);
-
-    $itemsFiltered = array_values(array_filter($allData, function ($item) use ($id) {
-        return $item->id !== $id;
-    }));
-
-    var_dump($itemsFiltered);
-
-    saveFileContent(LOCAIS, $itemsFiltered);
+   $place = new Place();
+   $place->delete($id);
 
     response(['message' => 'Deletado com sucesso'], 204);
-
-}else if ($method === 'GET' && $_GET['id']) {
-    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+} else if ($method === 'GET' && $_GET['id']) {
+    $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!$id) {
         responseError('ID ausente', 400);
     }
 
-    $allData = readFileContent(LOCAIS);
+    $place = new Place();
+    $item = $place->listOne($id);
 
-    foreach ($allData as $item) {
-        if ($item->id === $id) {
-            response($item, 200);
-        }
-    }
-}else if ($method === 'PUT') {
+    response($item, 200);
+
+} else if ($method === 'PUT') {
     $body = getBody();
-    $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+    $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!$id) {
         responseError('ID ausente', 400);
     }
 
-    $allData = readFileContent(LOCAIS);
-
-
-    foreach ($allData as $position => $item) {
-        if ($item->id === $id) {
-            $allData[$position]->name =  isset($body->name) ? $body->name : $item->name;
-            $allData[$position]->contact =  isset($body->contact) ? $body->contact : $item->contact;
-            $allData[$position]->opening_hours =   isset($body->opening_hours) ? $body->opening_hours : $item->opening_hours;
-            $allData[$position]->description =  isset($body->description) ? $body->description : $item->description;
-            $allData[$position]->latitude =  isset($body->latitude) ? $body->latitude : $item->latitude;
-            $allData[$position]->longitude =  isset($body->longitude) ? $body->longitude : $item->longitude;
-        }
-    }
-
-    saveFileContent(LOCAIS, $allData);
+    $place = new Place();
+    $place->update($id, $body);
 
     response([], 200);
 }
-?>
