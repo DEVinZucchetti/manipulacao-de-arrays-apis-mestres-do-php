@@ -1,0 +1,11 @@
+[
+    {
+        "id": "655aa46064413",
+        "name": "Fabricio lanches onde o [EDITADO PELO ADMIN] rola solto",
+        "email": "fabricio@gmail.com",
+        "stars": 1,
+        "status": "PENDENTE",
+        "date": "19\/11\/2023 09:11",
+        "place_id": "1700439104"
+    }
+]
