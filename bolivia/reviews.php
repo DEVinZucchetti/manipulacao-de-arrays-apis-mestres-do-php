@@ -51,5 +51,21 @@ if ($method === 'POST') {
     $reviews = new Review($place_id);
 
     response($reviews->list(), 200);
+    
+}else if ($method === "PUT") {
+    echo "............";
+    $body = getBody();
+    $id =  sanitizeInput($_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS, false);
+
+    $status = sanitizeInput($body,  'status', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!$status) {
+        responseError('Status ausente', 400);
+    }
+
+    $review = new Review();
+    $review->updateStatus($id, $status);
+
+    response(['message' => 'Atualizado com sucesso'], 200);
 }
 ?>
