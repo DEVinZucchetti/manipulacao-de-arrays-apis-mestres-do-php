@@ -1,7 +1,7 @@
 <?php 
 require_once 'config.php';
 require_once 'utils.php';
-require_once 'models/Review.php';
+require_once './models/Review.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -14,14 +14,13 @@ if ($method === 'POST') {
     $name = sanitizeInput($body, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
     $email = sanitizeInput($body, 'email', FILTER_VALIDATE_EMAIL);
     $stars = sanitizeInput($body, 'stars', FILTER_VALIDATE_FLOAT);
-    $date = (new DateTime())->format('d/m/y H:i:');
-    $status = sanitizeInput($body, 'status', FILTER_SANITIZE_SPECIAL_CHARS);
+    
 
     if (!$place_id) responseError('ID Obrigatorio', 400);
     if (!$name) responseError('Descrição obrigatoria', 400);
     if (!$email) responseError('Email Obrigatorio', 400);
     if (!$stars) responseError('Quantidade de estrelas obrigatorio', 400);
-    if (!$status) responseError('Status Obrigatorio', 400);
+    
 
 
     if (strlen($name) > 200) {
@@ -30,18 +29,27 @@ if ($method === 'POST') {
 
     foreach ($blacklist as $word) {
 
-        if(str_contains($name, $word)) {
-            $name = str_replace($word, '[EDITADO PELO ADMIN]', $name);
+        if(str_contains(strtolower($name), $word)) {
+            $name = str_ireplace($word, '[EDITADO PELO ADMIN]', $name);
         }
     }
-    $review = new Review($place_id);
+    
 
+    $review = new Review($place_id);
     $review->setName($name);
     $review->setEmail($email);
     $review->setStars($stars);
-    $review->setDate($date);
-    $review->setStatus($Status);
+    $review->save();
 
-    
+    response(['message' => 'Cadastro com sucesso'], 201);
+}else if ($method === 'GET') {
+
+    $place_id = sanitizeInput($_GET,  'id', FILTER_SANITIZE_SPECIAL_CHARS, false);
+
+    if (!$place_id) responseError('ID do lugar está ausente', 400);
+
+    $reviews = new Review($place_id);
+
+    response($reviews->list(), 200);
 }
 ?>
