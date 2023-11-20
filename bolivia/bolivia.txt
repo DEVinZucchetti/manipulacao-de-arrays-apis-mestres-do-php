@@ -1,1 +1,11 @@
-[{"id":1699406901,"name":"Nascimento Lanches","contact":"4002-8922","opening_hours":"08:00 as 20:00","description":"O melhor lanche da cidade","latitude":"-146558","longitude":"125648"},{"id":1699407220,"name":"Ravi Lanches","contact":"4002-8922","opening_hours":"08:00 as 20:00","description":"O melhor lanche da cidade","latitude":"-146558","longitude":"125648"},{"id":1699407228,"name":"Nascimento Lanches 3","contact":"4002-8922","opening_hours":"08:00 as 20:00","description":"O melhor lanche da cidade","latitude":"-146558","longitude":"125648"},{"id":1699411287,"name":"Nascimento Lanches 4","contact":"4002-8922","opening_hours":"08:00 as 20:00","description":"O melhor lanche da cidade","latitude":"-146558","longitude":"125648"},{"id":1700348376,"name":"Nascimento Lanches 2","contact":"4002-8922","opening_hours":"08:00 as 20:00","description":"O melhor lanche da cidade","latitude":"-146558","longitude":"125648"}]
+[
+    {
+        "id": 1700439104,
+        "name": "Nascimento Lanches 2",
+        "contact": "4002-8922",
+        "opening_hours": "08:00 as 20:00",
+        "description": "O melhor lanche da cidade",
+        "latitude": "-146558",
+        "longitude": "125648"
+    }
+]
