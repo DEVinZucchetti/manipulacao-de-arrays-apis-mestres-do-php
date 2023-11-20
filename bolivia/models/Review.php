@@ -1,20 +1,64 @@
 <?php 
-
+require_once './utils.php';
 
 // nome da classe
 //atributos da classe
+
+
+/*
+enum ReviewsStatus {
+    case 'plano_g': 'GOLD';
+    case 2: 'FINALIZADO';
+    case 3: 'REPROVADO';
+}
+*/
 class Review{
 
-    private $id, $name, $email, $stars, $date, $status, $place;
+    private $id, $name, $email, $stars, $date, $status, $place_id;
 
-    public function __construct($place)
+    public function __construct($place_id)
     {
-        $this->place = $place;
+        $this->place_id = $place_id;
         $this->id = uniqid();
+        $this->date = (new DateTime())->format('d/m/Y h:m');
+        $this->status = 'PENDENTE';
     }
 
     public function save(){
+
+       
+            $data = [
+                'id' => $this->getId(),
+                'name' => $this->getName(),
+                'email' => $this->getEmail(),
+                'stars' => $this->getStars(),
+                'status' => $this->getStatus(),
+                'date' => $this->getDate(),
+                'place_id' => $this->getPlaceId()
+                
+            ];
+    
+           $allData = readFileContent('reviews.txt');
+           array_push($allData, $data );
+           saveFileContent('reviews.txt', $allData);
         
+        
+    }
+
+    public function list()
+    {
+        $allData = readFileContent('reviews.txt');
+
+        $filtered = array_values(array_filter($allData, function ($review) {
+            return $review->place_id === $this->getPlaceId();
+        }));
+
+        return $filtered;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
     
     public function getName()
@@ -69,6 +113,11 @@ class Review{
     {
         $this->status = $status;
 
+    }
+
+    public function getPlaceId()
+    {
+        return $this->place_id;
     }
 }
 ?>
