@@ -67,5 +67,7 @@ if ($method === 'POST') {
     $review->updateStatus($id, $status);
 
     response(['message' => 'Atualizado com sucesso'], 200);
+
+   
 }
 ?>
