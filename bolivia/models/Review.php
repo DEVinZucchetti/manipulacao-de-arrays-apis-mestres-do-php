@@ -56,6 +56,22 @@ class Review{
         return $filtered;
     }
 
+    public function updateStatus($id, $status)
+    {
+        $allData = readFileContent('reviews.txt');
+
+     
+        foreach ($allData  as $review) {
+            if ($review->id === $id) {
+                $review->status = $status;
+                saveFileContent(FILE_REVIEWS, $allData);
+            }
+        }
+       
+
+        saveFileContent('reviews.txt', $allData);
+    }
+
     public function getId()
     {
         return $this->id;
