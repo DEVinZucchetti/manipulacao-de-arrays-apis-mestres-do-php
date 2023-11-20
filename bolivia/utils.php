@@ -13,7 +13,7 @@ function readFileContent($fileName)
 
 function saveFileContent($fileName, $content)
 {
-  file_put_contents($fileName, json_encode($content));
+  file_put_contents($fileName, json_encode($content, JSON_PRETTY_PRINT));
 }
 
 function sanitizeString($value)
@@ -33,4 +33,20 @@ function response($response, $status)
   http_response_code($status);
   echo json_encode($response);
   exit;
+}
+
+function debug($content)
+{
+  echo '<pre>';
+  echo var_dump($content);
+  echo '</pre>';
+}
+
+function sanitizeInput($data, $property, $filterType, $isObject = true) {
+  if($isObject) {
+    return isset($data->$property) ? filter_var($data->$property, $filterType) : null;
+  } else {
+    return isset($data[$property]) ? filter_var($data[$property], $filterType) : null;
+  }
+ 
 }

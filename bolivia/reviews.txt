@@ -1,0 +1,20 @@
+[
+    {
+        "id": "655b5a59f030f",
+        "name": "Fabricio lanches onde o [EDITADO PELO ADMIN] rola solto",
+        "email": "fabricio@gmail.com",
+        "stars": 1,
+        "status": "PENDENTE",
+        "date": "20\/11\/2023 10:11",
+        "place_id": "655b59e7ce270"
+    },
+    {
+        "id": "655b5a6604d58",
+        "name": "Rose lanches onde o [EDITADO PELO ADMIN] rola solto",
+        "email": "fabricio@gmail.com",
+        "stars": 1,
+        "status": "PENDENTE",
+        "date": "20\/11\/2023 10:11",
+        "place_id": "655b59e7ce270"
+    }
+]
