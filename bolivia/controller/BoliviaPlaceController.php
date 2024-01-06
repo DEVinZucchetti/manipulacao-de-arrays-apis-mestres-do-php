@@ -1,85 +1,91 @@
 <?php
-// require_once '../config.php';
-require_once 'utils.php';
-require_once 'models/Place.php';
+require_once '../utils.php';
+require_once '../models/Place.php';
+require_once '../models/PlaceDAO.php';
 
-class BoliviaPlaceController
+class PlaceController
 {
-  public function createOne()
-  {
-    $boliviaData = readFileContent(PLACES);
-    $body = getBody();
 
-    $name = sanitizeString($body->name);
-    $contact = sanitizeString($body->contact);
-    $opening_hours = sanitizeString($body->opening_hours);
-    $description = sanitizeString($body->description);
-    $latitude = filter_var($body->latitude, FILTER_VALIDATE_FLOAT);
-    $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
+    public function create()
+    {
+        $body = getBody();
 
-    if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
-      responseError('Preencha os campos necessários', 400);
-    } else {
-      $placeAlreadyExists = array_filter($boliviaData, function ($item) use ($name) {
-        return $item->name === $name;
-      });
-    }
-    if ($placeAlreadyExists) {
-      responseError('Um lugar com o mesmo nome já existe', 400);
-    } else {
-      $place = new Place($name);
-      $place->setContact($contact);
-      $place->setOpeningHours($opening_hours);
-      $place->setDescription($description);
-      $place->setLatitude($latitude);
-      $place->setLongitude($longitude);
-      $place->save();
-      response(['message' => 'Lugar cadastrado com sucesso'], 201);
-    }
-  }
-  public function list()
-  {
-    $places = (new Place())->list();
-    response($places, 200);
-  }
-  public function delete()
-  {
-    $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $name = sanitizeString($body->name);
+        $contact = sanitizeString($body->contact);
+        $opening_hours = sanitizeString($body->opening_hours);
+        $description = sanitizeString($body->description);
+        $latitude = filter_var($body->latitude, FILTER_VALIDATE_FLOAT);
+        $longitude = filter_var($body->longitude, FILTER_VALIDATE_FLOAT);
 
-    if (!$id) {
-      responseError('ID ausente', 400);
+        if (!$name || !$contact || !$opening_hours || !$description || !$latitude || !$longitude) {
+            responseError('Faltaram informações essenciais', 400);
+        }
+
+        $place = new Place($name);
+        $place->setContact($contact);
+        $place->setOpeningHours($opening_hours);
+        $place->setDescription($description);
+        $place->setLatitude($latitude);
+        $place->setLongitude($longitude);
+
+        $placeDAO = new PlaceDAO();
+        $result = $placeDAO->insert($place);
+
+        if ($result['success'] === true) {
+            response(["message" => "Cadastrado com sucesso"], 201);
+        } else {
+            responseError("Não foi possível realizar o cadastro", 400);
+        }
     }
 
-    $place = new Place();
-    $place->delete($id);
 
-    response(['message' => 'Deletado com sucesso'], 204);
-  }
-  public function listOne()
-  {
-    $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
-
-    if (!$id) {
-      responseError('ID ausente', 400);
+    public function list()
+    {
+        $placeDAO = new PlaceDAO();
+        $result = $placeDAO->findMany();
+        response($result, 200);
     }
 
-    $place = new Place();
-    $item = $place->listOne($id);
+    public function delete()
+    {
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
-    response($item, 200);
-  }
-  public function update()
-  {
-    $body = getBody();
-    $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!$id) {
+            responseError('ID ausente', 400);
+        }
 
-    if (!$id) {
-      responseError('ID ausente', 400);
+        $placeDAO = new PlaceDAO();
+        $placeDAO->deleteOne($id);
+
+        response(['message' => 'Deletado com sucesso'], 204);
     }
 
-    $place = new Place();
-    $place->update($id, $body);
+    public function listOne()
+    {
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
 
-    response(['message' => 'atualizado com sucesso'], 200);
-  }
+        if (!$id) {
+            responseError('ID ausente', 400);
+        }
+
+        $PlaceDAO = new PlaceDAO();
+        $item = $PlaceDAO->findOne($id);
+
+        response($item, 200);
+    }
+
+    public function update()
+    {
+        $body = getBody();
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if (!$id) {
+            responseError('ID ausente', 400);
+        }
+
+        $placeDAO = new PlaceDAO();
+        $placeDAO->updateOne($id, $body);
+
+        response(['message' => 'atualizado com sucesso'], 200);
+    }
 }

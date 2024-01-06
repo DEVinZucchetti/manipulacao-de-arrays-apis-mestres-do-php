@@ -1,13 +1,12 @@
 <?php
-require_once 'config.php';
-require_once 'utils.php';
-require_once '../bolivia/controller/BoliviaPlaceController.php';
+require_once '../config.php';
+require_once '../controller/BoliviaPlaceController.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-$controller = new BoliviaPlaceController();
+$controller = new PlaceController();
 
 if ($method === 'POST') {
-  $controller->createOne();
+  $controller->create();
 } else if ($method === 'GET' && !isset($_GET['id'])) {
   $controller->list();
 } else if ($method === 'DELETE') {

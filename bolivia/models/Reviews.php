@@ -1,6 +1,5 @@
 <?php
-require_once '../bolivia/utils.php';
-require_once '../bolivia/config.php';
+require_once './utils.php';
 
 class Review
 {
@@ -26,36 +25,35 @@ class Review
             'place_id' => $this->getPlaceId()
         ];
 
-        $allData = readFileContent('boliviaReviews.txt');
+        $allData = readFileContent('reviews.txt');
         array_push($allData,  $data);
-        saveFileContent('boliviaReviews.txt', $allData);
+        saveFileContent('reviews.txt', $allData);
     }
 
     public function list()
     {
-        $allData = readFileContent('boliviaReviews.txt');
+        $allData = readFileContent('reviews.txt');
 
-        $filtered = array_values(array_filter($allData, function ($review) {            
+        $filtered = array_values(array_filter($allData, function ($review) {
             return $review->place_id === $this->getPlaceId();
         }));
 
         return $filtered;
     }
+
     public function updateStatus($id, $status)
     {
-        $allData = readFileContent('boliviaReviews.txt');
-
+        $allData = readFileContent('reviews.txt');
         foreach ($allData  as $review) {
             if ($review->id === $id) {
                 $review->status = $status;
-                saveFileContent(BOLIVIA_FILE_REVIEWS, $allData);
+                saveFileContent(FILE_REVIEWS, $allData);
             }
         }
-       
 
-        saveFileContent(BOLIVIA_FILE_REVIEWS, $allData);
+
+        saveFileContent('reviews.txt', $allData);
     }
-
 
     public function getId()
     {
